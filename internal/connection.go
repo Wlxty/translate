@@ -1,10 +1,10 @@
-package database
+package internal
 
 import (
-	"fmt"
-  _ "github.com/lib/pq"
-          "database/sql"
+	"database/sql"
 	"errors"
+	"fmt"
+	_ "github.com/lib/pq"
 )
 
 var Conn *sql.DB
