@@ -3,4 +3,4 @@ tmp/
 
 # Local development configurations.
 .devcontainer/
-
+config.env
