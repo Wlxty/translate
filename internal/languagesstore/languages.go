@@ -8,7 +8,7 @@ type LanguagesStore struct {
 	languages map[string]string
 }
 
-func New() *LanguagesStore {
+func New() LanguagesStore {
 	languages := map[string]string{
 		"af":    "Afrikaans",
 		"sq":    "Albanian",
@@ -120,7 +120,7 @@ func New() *LanguagesStore {
 		"zu":    "Zulu",
 	}
 	languagesStore := LanguagesStore{languages: languages}
-	return &languagesStore
+	return languagesStore
 }
 
 func (ts *LanguagesStore) Language(key string) (string){
