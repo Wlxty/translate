@@ -123,12 +123,17 @@ func New() *LanguagesStore {
 	return &languagesStore
 }
 
-func (ts *LanguagesStore) GetLanguage(key string) (string){
-	value, exists := ts.languages[key]
+func (ts *LanguagesStore) Language(key string) (string){
+	value, exists := ts.Languages()[key]
 	if exists {
 		return value
 	}
 	return ""
+}
+
+func (ts *LanguagesStore) Languages() (map[string]string){
+	languages := ts.languages
+	return languages
 }
 
 func (ts *LanguagesStore) DeleteLanguage(key string) error{
