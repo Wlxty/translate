@@ -132,7 +132,7 @@ func (ts *LanguagesStore) GetLanguage(key string) (string){
 }
 
 func (ts *LanguagesStore) DeleteLanguage(key string) error{
-	languages := *&ts.languages
+	languages := ts.languages
 	if _, ok := languages[key]; !ok {
 		return errors.New("Such Language does not exist")
 	}
