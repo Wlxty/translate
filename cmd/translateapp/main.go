@@ -1,12 +1,12 @@
 package main
 
 import (
-	//"context"
+	"context"
 	"fmt"
 	"translateapp/internal"
 	"log"
-	//"os/signal"
-	//"syscall"
+	"os/signal"
+	"syscall"
 	"net/http"
 	servers "translateapp/internal/server"
 	"github.com/gorilla/mux"
@@ -23,13 +23,15 @@ func main() {
 
 	//specify endpoints, handler functions and HTTP method
 	router.HandleFunc("/languages/", server.TaskHandler).Methods("GET")
+	router.HandleFunc("/translate/", servers.TranslateHandler).Methods("POST")
+
 	http.Handle("/", router)
 
 	//start and listen to requests
 	http.ListenAndServe(":8080", router)
 
-	/* ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer done()
 	<-ctx.Done()
-	log.Printf("successful shutdown") */
+	log.Printf("successful shutdown")
 }
