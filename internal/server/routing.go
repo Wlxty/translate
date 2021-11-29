@@ -3,6 +3,7 @@ package server
 import(
 	"net/http"
 	"fmt"
+	"errors"
 	"encoding/json"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
@@ -26,6 +27,10 @@ func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Requ
 		"word": req.FormValue("word"),
 		"source": req.FormValue("source"),
 		"target": req.FormValue("target"),
+	}
+	if data["word"] == "" || data["source"] == "" || data["target"] == "" {
+		fmt.Fprintf(w, "Error: %s", errors.New("Require all parameters to be filled"))
+		return
 	}
 	jsonify, err := json.Marshal(data)
 	if err != nil {
