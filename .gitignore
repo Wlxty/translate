@@ -5,4 +5,4 @@ tmp/
 .devcontainer/
 config.env
 *.swp
-
+.idea
