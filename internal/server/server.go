@@ -24,5 +24,5 @@ func HandleRequests() {
 	router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/", server.HomePageHandler).Methods("GET")
 	//start and listen to requests
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
