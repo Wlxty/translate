@@ -3,6 +3,7 @@ package server
 import(
 	"net/http"
 	"fmt"
+	"encoding/json"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
 	if req.URL.Path == "/languages/" {
@@ -19,3 +20,18 @@ func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Reque
 func (ts *taskServer) HomePageHandler(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, ":Endpoint called: HomePage")
 }
+
+func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Request) {
+	data := map[string]string{
+		"word": req.FormValue("word"),
+		"source": req.FormValue("source"),
+		"target": req.FormValue("target"),
+	}
+	jsonify, err := json.Marshal(data)
+	if err != nil {
+		fmt.Fprintf(w,"Error: %s", err.Error())
+	} else {
+		fmt.Fprintf(w,string(jsonify))
+	}
+}
+
