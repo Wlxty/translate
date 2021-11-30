@@ -7,17 +7,17 @@ import(
 	"encoding/json"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
-			//ts.getArrayLanguages(w, req)
-			data := map[string]string{
-				"code": "code",
-				"name": "name",
-			}
-			jsonify, err := json.Marshal(data)
-			if err != nil {
-				fmt.Fprintf(w,"Error: %s", err.Error())
-				return
-			}
-				fmt.Fprintf(w,string(jsonify))
+	//ts.getArrayLanguages(w, req)
+	data := map[string]string{
+		"code": "code",
+		"name": "name",
+	}
+	jsonify, err := json.Marshal(data)
+	if err != nil {
+		fmt.Fprintf(w,"Error: %s", err.Error())
+		return
+	}
+	fmt.Fprintf(w,string(jsonify))
 }
 
 func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Request) {
@@ -26,6 +26,7 @@ func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Requ
 		"source": req.FormValue("source"),
 		"target": req.FormValue("target"),
 	}
+
 	if data["word"] == "" || data["source"] == "" || data["target"] == "" {
 		fmt.Fprintf(w, "Error: %s", errors.New("Require all parameters to be filled"))
 		return
@@ -35,6 +36,7 @@ func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Requ
 		fmt.Fprintf(w,"Error: %s", err.Error())
 		return
 	}
+
 	output := map[string]string{
 		"TranslatedWord": "Translated word",
 	}
