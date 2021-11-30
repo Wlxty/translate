@@ -1,18 +1,9 @@
 package server
 import(
-	"translateapp/internal/languages"
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
 )
-type taskServer struct {
-	store *languages.Repository
-}
-
-func NewTaskServer() *taskServer {
-	repository := languages.New()
-	return &taskServer{store: &repository}
-}
 
 func HandleRequests() {
 	server := NewTaskServer()
