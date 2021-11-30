@@ -7,19 +7,17 @@ import(
 	"encoding/json"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
-	if req.URL.Path == "/languages/" {
-		// Request is plain "/task/", without trailing ID.
-		if req.Method == http.MethodGet {
-			ts.getArrayLanguages(w, req)
-		} else {
-			http.Error(w, fmt.Sprintf("expect method GET, DELETE or POST at /task/, got %v", req.Method), http.StatusMethodNotAllowed)
-			return
-		}
-	}
-}
-
-func (ts *taskServer) HomePageHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, ":Endpoint called: HomePage")
+			//ts.getArrayLanguages(w, req)
+			data := map[string]string{
+				"code": "code",
+				"name": "name",
+			}
+			jsonify, err := json.Marshal(data)
+			if err != nil {
+				fmt.Fprintf(w,"Error: %s", err.Error())
+				return
+			}
+				fmt.Fprintf(w,string(jsonify))
 }
 
 func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Request) {
@@ -32,11 +30,16 @@ func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Requ
 		fmt.Fprintf(w, "Error: %s", errors.New("Require all parameters to be filled"))
 		return
 	}
-	jsonify, err := json.Marshal(data)
+	_, err := json.Marshal(data)
 	if err != nil {
 		fmt.Fprintf(w,"Error: %s", err.Error())
-	} else {
-		fmt.Fprintf(w,string(jsonify))
+		return
 	}
+	output := map[string]string{
+		"TranslatedWord": "Translated word",
+	}
+	JsonOutput, _ := json.Marshal(output)
+
+	fmt.Fprintf(w, string(JsonOutput))
 }
 
