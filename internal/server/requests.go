@@ -5,13 +5,16 @@ import(
 	"fmt"
 	"errors"
 	"encoding/json"
+	"translateapp/internal/languages"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
 	//ts.getArrayLanguages(w, req)
-	data := map[string]string{
+	/*data := map[string]string{
 		"code": "code",
 		"name": "name",
-	}
+	}*/
+	repository := languages.New()
+	data := repository.Languages()
 	jsonify, err := json.Marshal(data)
 	if err != nil {
 		fmt.Fprintf(w,"Error: %s", err.Error())
