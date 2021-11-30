@@ -22,7 +22,7 @@ func TestingNew(t *testing.T) {
 
 func TestingLanguages(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		repository := Repository{map[string]string{}}
+		repository := New()
 		array := repository.Languages()
 		assert.Equal(t, len(array), 0, "they should be equal")
 	})
