@@ -1,4 +1,4 @@
-package languagesstore
+package languages
 
 import (
 	"testing"
@@ -8,8 +8,8 @@ import (
 func TestingNew(t *testing.T) {
 	t.Run("success", func(t *testing.T){
 		assert := assert.New(t)
-		languagesStore := New()
-		assert.NotNil(t, languagesStore )
+		repository := New()
+		assert.NotNil(t, repository )
 	})
 
 	t.Run("failure", func(t *testing.T){
@@ -22,8 +22,8 @@ func TestingNew(t *testing.T) {
 
 func TestingLanguages(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		store := LanguagesStore{map[string]string{}}
-		array := store.Languages()
+		repository := New()
+		array := repository.Languages()
 		assert.Equal(t, len(array), 0, "they should be equal")
 	})
 }
