@@ -1,14 +1,14 @@
-package languagesstore
+package languages
 
 import(
 	"errors"
 )
 
-type LanguagesStore struct {
+type Repository struct {
 	languages map[string]string
 }
 
-func New() LanguagesStore {
+func New() Repository {
 	languages := map[string]string{
 		"af":    "Afrikaans",
 		"sq":    "Albanian",
@@ -119,25 +119,25 @@ func New() LanguagesStore {
 		"yo":    "Yoruba",
 		"zu":    "Zulu",
 	}
-	languagesStore := LanguagesStore{languages: languages}
-	return languagesStore
+	repo := Repository{languages: languages}
+	return repo
 }
 
-func (ts *LanguagesStore) Language(key string) (string){
-	value, exists := ts.Languages()[key]
+func (repo *Repository) Language(key string) (string){
+	value, exists := repo.Languages()[key]
 	if exists {
 		return value
 	}
 	return ""
 }
 
-func (ts *LanguagesStore) Languages() (map[string]string){
-	languages := ts.languages
+func (repo *Repository) Languages() (map[string]string){
+	languages := repo.languages
 	return languages
 }
 
-func (ts *LanguagesStore) DeleteLanguage(key string) error{
-	languages := ts.languages
+func (repo *Repository) DeleteLanguage(key string) error{
+	languages := repo.languages
 	if _, ok := languages[key]; !ok {
 		return errors.New("Such Language does not exist")
 	}
