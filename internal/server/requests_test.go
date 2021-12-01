@@ -42,3 +42,4 @@ func TestingTranslatePage(t *testing.T) {
 		}
 	})
 }
+
