@@ -5,4 +5,4 @@ go.sum
 .idea/*
 # Local development configurations.
 .devcontainer/
-
+config.env
