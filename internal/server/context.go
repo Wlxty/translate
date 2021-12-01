@@ -1,7 +1,5 @@
 package server
 import(
-	"net/http"
-	"log"
 	"translateapp/internal/languages"
 )
 
