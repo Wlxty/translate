@@ -1,7 +1,7 @@
 # Air temporary directory.
 tmp/
 go.sum
-.idea
+.idea/
 .idea/*
 # Local development configurations.
 .devcontainer/
