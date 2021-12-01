@@ -6,6 +6,7 @@ import(
 	"errors"
 	"encoding/json"
 	"translateapp/internal/languages"
+	"translateapp/internal/translated"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
 	repository := languages.New()
@@ -35,9 +36,8 @@ func (ts *taskServer) TranslatePageHandler(w http.ResponseWriter, req *http.Requ
 		return
 	}
 
-	output := map[string]string{
-		"TranslatedWord": "Translated word",
-	}
+	repository := translated.New("Translated word")
+	output := repository.TranslatedWord()
 	JsonOutput, _ := json.Marshal(output)
 
 	fmt.Fprintf(w, string(JsonOutput))

@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1284150f-534c-4e69-9277-e59efed80f11" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/internal/server/context.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/server/context.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/translated/context.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/translated/context_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/server/requests.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/server/requests.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,10 +63,11 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/internal/database" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/internal" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal" />
       <recent name="$PROJECT_DIR$/internal/database" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
