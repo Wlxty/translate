@@ -8,11 +8,6 @@ import(
 	"translateapp/internal/languages"
 )
 func (ts *taskServer) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
-	//ts.getArrayLanguages(w, req)
-	/*data := map[string]string{
-		"code": "code",
-		"name": "name",
-	}*/
 	repository := languages.New()
 	data := repository.Languages()
 	jsonify, err := json.Marshal(data)
