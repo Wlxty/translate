@@ -39,7 +39,7 @@ func (ts *Server) TranslatePageHandler(w http.ResponseWriter, req *http.Request)
 	repository := ts.translated
 	output := repository.TranslatedWord()
 	JsonOutput, _ := json.Marshal(output)
-        log.Println("request type: POST, endpoint: localhost:8080/translate")
+	log.Println("request type: POST, endpoint: localhost:8080/translate, variables: {", data["word"], data["source"], data["target"], "}")
 
 	fmt.Fprintf(w, string(JsonOutput))
 }
