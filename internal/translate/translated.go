@@ -1,12 +1,4 @@
-package models
-
-type Word struct{
-	TranslatedWord string
-}
-
-type TranslatedWordRepository struct {
-	translated Word
-}
+package translate
 
 func NewTranslation(word string) TranslatedWordRepository {
 	data := Word{

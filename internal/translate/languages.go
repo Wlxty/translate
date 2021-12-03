@@ -1,13 +1,4 @@
-package models
-
-type Language struct{
-	Code string
-	Name string
-}
-
-type LanguageRepository struct {
-	languages []Language
-}
+package translate
 
 func NewLanguage() LanguageRepository {
 	languages := []Language{

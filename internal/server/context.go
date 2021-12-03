@@ -1,6 +1,6 @@
 package server
 import(
-	"translateapp/internal/models"
+	models "translateapp/internal/translate"
         "github.com/gorilla/mux"
 )
 

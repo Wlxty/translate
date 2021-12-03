@@ -11,7 +11,7 @@ import (
 func main() {
 	log.Printf("starting...")
 	ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	server.HandleRequests()
+	server.HandleRequests(":8080")
 	defer done()
 	<-ctx.Done()
 	log.Printf("successful shutdown")
