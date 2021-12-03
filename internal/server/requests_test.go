@@ -13,7 +13,7 @@ import (
 func TestingTranslatePage(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		r := mux.NewRouter()
-		server := NewTaskServer()
+		server := NewServer()
 
 		r.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")
 		ts := httptest.NewServer(r)

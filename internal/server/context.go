@@ -1,13 +1,18 @@
 package server
 import(
-	"translateapp/internal/languages"
+	"translateapp/internal/models"
 )
 
-type taskServer struct {
-	store *languages.Repository
+type Server struct {
+	languages *models.LanguageRepository
+	translated *models.TranslatedWordRepository
 }
 
-func NewTaskServer() *taskServer {
-	repository := languages.New()
-	return &taskServer{store: &repository}
+func NewServer() *Server {
+	lang := models.NewLanguage()
+	word := models.NewTranslation("word")
+	return &Server{
+		languages: &lang,
+		translated: &word,
+	}
 }

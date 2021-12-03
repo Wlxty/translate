@@ -1,15 +1,15 @@
-package languages
+package models
 
 type Language struct{
 	Code string
 	Name string
 }
 
-type Repository struct {
+type LanguageRepository struct {
 	languages []Language
 }
 
-func New() Repository {
+func NewLanguage() LanguageRepository {
 	languages := []Language{
 		Language{"af", "Afrikaans"},
 		Language{"sq", "Albanian"},
@@ -120,11 +120,11 @@ func New() Repository {
 		Language{"yo", "Yoruba"},
 		Language{"zu", "Zulu"},
 	}
-	repo := Repository{languages: languages}
+	repo := LanguageRepository{languages: languages}
 	return repo
 }
 
-func (repo *Repository) Languages() ([]Language){
+func (repo *LanguageRepository) Languages() ([]Language){
 	languages := repo.languages
 	return languages
 }

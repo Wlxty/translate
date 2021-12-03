@@ -6,11 +6,10 @@ import(
 )
 
 func HandleRequests() {
-	server := NewTaskServer()
+	server := NewServer()
 
 	//create a new router
 	router := mux.NewRouter().StrictSlash(true)
-
 	//specify endpoints, handler functions and HTTP method
 	router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")
