@@ -2,14 +2,13 @@ package server
 import(
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
 )
 
 func HandleRequests() {
 	server := NewServer()
 
 	//create a new router
-	router := mux.NewRouter().StrictSlash(true)
+	router := server.router
 	//specify endpoints, handler functions and HTTP method
 	router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")

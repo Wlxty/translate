@@ -5,3 +5,5 @@ tmp/
 # Local development configurations.
 .devcontainer/
 config.env
+*.swp
+*.swo
