@@ -4,7 +4,7 @@ import(
 	"net/http"
 )
 
-func HandleRequests() {
+func HandleRequests(port string) {
 	server := NewServer()
 
 	//create a new router
@@ -13,5 +13,5 @@ func HandleRequests() {
 	router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")
 	//start and listen to requests
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(port, router))
 }
