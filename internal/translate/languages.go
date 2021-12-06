@@ -1,6 +1,6 @@
 package translate
 
-func NewLanguage() LanguageRepository {
+func (l *Language)  Languages() []Language {
 	languages := []Language{
 		Language{"af", "Afrikaans"},
 		Language{"sq", "Albanian"},
@@ -111,11 +111,5 @@ func NewLanguage() LanguageRepository {
 		Language{"yo", "Yoruba"},
 		Language{"zu", "Zulu"},
 	}
-	repo := LanguageRepository{languages: languages}
-	return repo
-}
-
-func (repo *LanguageRepository) Languages() ([]Language){
-	languages := repo.languages
 	return languages
 }

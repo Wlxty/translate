@@ -4,17 +4,16 @@ type Word struct{
 	TranslatedWord string
 }
 
-type TranslatedWordRepository struct {
-	translated Word
+type TranslatedRepository interface {
+	Translate() (Word)
 }
-
 type Language struct{
 	Code string
 	Name string
 }
 
-type LanguageRepository struct {
-	languages []Language
+type LanguageRepository interface {
+	Languages() ([]Language)
 }
 
 

@@ -5,18 +5,21 @@ import(
 )
 
 type Server struct {
-	languages *models.LanguageRepository
-	translated *models.TranslatedWordRepository
+	languages []models.Language
+	translated models.Word
 	router *mux.Router
 }
 
 func NewServer() *Server {
-	lang := models.NewLanguage()
-	word := models.NewTranslation("word")
+	word := models.NewWord("word")
+	var language models.Language
+	lang := language.Languages()
+	translate := word.Translate()
+
 	router := mux.NewRouter().StrictSlash(true)
 	return &Server{
-		languages: &lang,
-		translated: &word,
+		languages: lang,
+		translated: translate,
 		router: router,
 	}
 }

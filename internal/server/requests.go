@@ -8,8 +8,7 @@ import(
 	"encoding/json"
 )
 func (ts *Server) LanguagePageHandler(w http.ResponseWriter, req *http.Request) {
-	repository := ts.languages
-	data := repository.Languages()
+	data := ts.languages
 	jsonify, err := json.Marshal(data)
 	if err != nil {
 		fmt.Fprintf(w,"Error: %s", err.Error())
@@ -37,7 +36,7 @@ func (ts *Server) TranslatePageHandler(w http.ResponseWriter, req *http.Request)
 	}
 
 	repository := ts.translated
-	output := repository.TranslatedWord()
+	output := repository.Translate()
 	JsonOutput, _ := json.Marshal(output)
 	log.Println("request type: POST, endpoint: localhost:8080/translate, variables: {", data["word"], data["source"], data["target"], "}")
 

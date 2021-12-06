@@ -1,14 +1,14 @@
 package translate
 
-func NewTranslation(word string) TranslatedWordRepository {
+func NewWord(word string) Word {
 	data := Word{
 		word,
 	}
-	repo := TranslatedWordRepository{translated: data}
-	return repo
+	return data
 }
 
-func (repo *TranslatedWordRepository) TranslatedWord() (Word){
-	translated := repo.translated
-	return translated
+func (repo Word) Translate() (Word){
+	src := repo
+	return src
 }
+
