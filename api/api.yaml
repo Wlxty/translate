@@ -12,6 +12,8 @@
           summary: Returns a list of languages.
           description: You can take one language from the list as option in translating word.
           responses:
+            '500': 
+              description: Internal Server Error
             '200':    # status code
               description: A JSON array of languages
               content:
@@ -38,5 +40,8 @@
                         word:
                          type: string
         responses: 
-          '201':
+          '200':
             description: Created
+          '500':
+            description: Internal Server Error
+
