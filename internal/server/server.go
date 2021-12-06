@@ -2,6 +2,7 @@ package server
 import(
 	"log"
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 func HandleRequests(port string) {
@@ -9,9 +10,14 @@ func HandleRequests(port string) {
 
 	//create a new router
 	router := server.router
-	//specify endpoints, handler functions and HTTP method
-	router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
-	router.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")
+	Routes(router, server)
 	//start and listen to requests
 	log.Fatal(http.ListenAndServe(port, router))
 }
+
+func Routes(router *mux.Router, server *Server) (error){
+        router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
+        router.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")
+        return nil
+}
+
