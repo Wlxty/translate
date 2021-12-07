@@ -1,47 +1,61 @@
-    openapi: 3.0.0
-    info:
-      title: TranslateApp API
-      description: Api in Golang.
-      version: 0.0.1
-    servers:
-      - url: http://localhost:8080/
-        description: Optional server description, e.g. Main (production) server
-    paths:
-      /languages:
-        get:
-          summary: Returns a list of languages.
-          description: You can take one language from the list as option in translating word.
-          responses:
-            '500': 
-              description: Internal Server Error
-            '200':    # status code
-              description: A JSON array of languages
-              content:
-                application/json:
-                  schema: 
-                    type: array
-                    items: 
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: TranslateApp API
+  description: A simple API to illustrate OpenAPI concepts
+
+servers:
+  - url: https://localhost:8080
+
+paths:
+  /languages:
+    get:
+      description: Returns a list of languages
+      #  ----- Added lines  ----------------------------------------
+      responses:
+        '200':
+          description: Successfully returned a list of languages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    name:
                       type: string
 
-      /translate:
-        post:
-          summary: Creates a translation.
-          requestBody:
-            required: true
-              content:
-                application/json:
-                  schema:
-                    type: object
-                      properties:
-                        source:
-                         type: string
-                        target:
-                         type: string
-                        word:
-                         type: string
-        responses: 
-          '200':
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  message:
+                    type: string
+      #  ---- /Added lines  ----------------------------------------
+      
+  /translate:
+    post:
+      summary: Creates a translation.
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  source:
+                    type: string
+                  target:
+                    type: string
+                  word:
+                    type: string
+      responses: 
+        '200':
             description: Created
-          '500':
+        '500':
             description: Internal Server Error
-
