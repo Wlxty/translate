@@ -4,7 +4,6 @@ import(
 	"net/http"
 	"fmt"
 	"errors"
-	"log"
 	"encoding/json"
 	"translateapp/internal/logging"
 )
@@ -15,11 +14,7 @@ func (ts *Server) LanguagePageHandler(w http.ResponseWriter, req *http.Request) 
 		fmt.Fprintf(w,"Error: %s", err.Error())
 		return
 	}
-
-	logger := logging.NewLogger("", true)
-	if logger == nil {
-		log.Println("request type: GET, endpoint: localhost:8080/languages")
-	}
+	logging.NewLogger("https://localhost:8080/languages", "GET")
 
 	fmt.Fprintf(w,string(jsonify))
 }
@@ -44,10 +39,7 @@ func (ts *Server) TranslatePageHandler(w http.ResponseWriter, req *http.Request)
 	repository := ts.translated
 	output := repository.Translate()
 	JsonOutput, _ := json.Marshal(output)
-	logger := logging.NewLogger("", true)
-        if logger == nil {
-		log.Println("request type: POST, endpoint: localhost:8080/translate, variables: {", data["word"], data["source"], data["target"], "}")
-	}
+	logging.NewLogger("https://localhost:8080/languages", "POST")
 	fmt.Fprintf(w, string(JsonOutput))
 }
 

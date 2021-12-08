@@ -21,8 +21,8 @@ import (
 func TestNewLogger(t *testing.T) {
 	t.Parallel()
 
-	logger := NewLogger("", true)
-	if logger == nil {
+	logger := NewLogger("https://localhost:8080/languages", "POST")
+	if logger != nil {
 		t.Fatal("expected logger to never be nil")
 	}
 }
