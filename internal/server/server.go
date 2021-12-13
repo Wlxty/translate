@@ -1,23 +1,26 @@
 package server
-import(
-	"log"
-	"net/http"
+
+import (
 	"github.com/gorilla/mux"
+	models "translateapp/internal/translateapp/models"
 )
 
-func HandleRequests(port string) {
-	server := NewServer()
-
-	//create a new router
-	router := server.router
-	Routes(router, server)
-	//start and listen to requests
-	log.Fatal(http.ListenAndServe(port, router))
+type Server struct {
+	Languages  []models.Language
+	Translated models.Word
+	Router     *mux.Router
 }
 
-func Routes(router *mux.Router, server *Server) (error){
-        router.HandleFunc("/languages", server.LanguagePageHandler).Methods("GET")
-        router.HandleFunc("/translate", server.TranslatePageHandler).Methods("POST")
-        return nil
-}
+func NewServer() *Server {
+	word := models.NewWord("word")
+	var language models.Language
+	lang := language.Languages()
+	translate := word.Translate()
 
+	router := mux.NewRouter().StrictSlash(true)
+	return &Server{
+		Languages:  lang,
+		Translated: translate,
+		Router:     router,
+	}
+}

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"translateapp/internal/server"
 	"context"
 	"log"
 	"os/signal"
 	"syscall"
+	server "translateapp/internal/translateapp"
 )
 
 func main() {
