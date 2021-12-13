@@ -2,25 +2,20 @@ package server
 
 import (
 	"github.com/gorilla/mux"
-	models "translateapp/internal/translateapp/models"
+	"translateapp/internal/service"
 )
 
 type Server struct {
-	Languages  []models.Language
-	Translated models.Word
-	Router     *mux.Router
+	Service *service.Service
+	Router  *mux.Router
 }
 
 func NewServer() *Server {
-	word := models.NewWord("word")
-	var language models.Language
-	lang := language.Languages()
-	translate := word.Translate()
 
 	router := mux.NewRouter().StrictSlash(true)
+	var service service.Service
 	return &Server{
-		Languages:  lang,
-		Translated: translate,
-		Router:     router,
+		Service: &service,
+		Router:  router,
 	}
 }
