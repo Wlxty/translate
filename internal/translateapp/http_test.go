@@ -1,7 +1,6 @@
 package translateapp
 
 import (
-	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -16,17 +15,13 @@ func TestGetRequest(t *testing.T) {
 	w := httptest.NewRecorder()
 	var server server.Server
 
-	service := Service{server: &server}
+	service := Client{server: &server}
 	service.LanguagePageHandler(w, req)
 	res := w.Result()
 
 	defer res.Body.Close()
-	
+
 	data, _ := ioutil.ReadAll(res.Body)
-	if err := json.NewEncoder(w).Encode(server.Languages); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 	assert.NotEqual(t, 0, len(data))
 }
 
@@ -40,13 +35,9 @@ func TestPostRequest(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	var server server.Server
-	service := Service{server: &server}
+	service := Client{server: &server}
 	service.TranslatePageHandler(w, req)
 	res := w.Result()
 
 	defer res.Body.Close()
-	if err := json.NewEncoder(w).Encode(server.Languages); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
