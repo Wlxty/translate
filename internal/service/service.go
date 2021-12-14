@@ -26,12 +26,12 @@ func (service *Service) Languages(writer http.ResponseWriter) error {
 func (service *Service) Translate(writer http.ResponseWriter) error {
 	var word models.Word
 	translate := tr.New(tr.Config{
-		Url: "http://localhost:5000/",
+		Url: "172.19.0.3:5000",
 		Key: "XXX",
 	})
 	output := word.Translate()
-	txt, _ := translate.Translate(output.TranslatedWord, "pl", "eng")
-	fmt.Println(output.TranslatedWord)
+	txt, _ := translate.Translate(output.TranslatedWord, "pl", "en")
+	fmt.Println(txt)
 	output = models.Word{txt}
 	jsonify, err := json.Marshal(output)
 	if err != nil {
