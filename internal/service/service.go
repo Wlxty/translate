@@ -3,8 +3,9 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	tr "github.com/snakesel/libretranslate"
+	"log"
 	"net/http"
+	"net/url"
 	"translateapp/internal/translateapp/models"
 )
 
@@ -23,18 +24,19 @@ func (service *Service) Languages(writer http.ResponseWriter) error {
 	return nil
 }
 
-func (service *Service) Translate(writer http.ResponseWriter) error {
-	var word models.Word
-	translate := tr.New(tr.Config{
-		Url: "172.19.0.3:5000",
-		Key: "XXX",
-	})
-	output := word.Translate()
-	txt, _ := translate.Translate(output.TranslatedWord, "pl", "en")
-	fmt.Println(txt)
-	output = models.Word{txt}
-	jsonify, err := json.Marshal(output)
+func (service *Service) Translate(writer http.ResponseWriter, data url.Values) error {
+	resp, err := http.PostForm("http://172.19.0.2:5000/translate", data)
+
 	if err != nil {
+		log.Fatal(err)
+	}
+
+	var res map[string]interface{}
+
+	json.NewDecoder(resp.Body).Decode(&res)
+	jsonify, err := json.Marshal(res)
+	if err != nil {
+		fmt.Fprintf(writer, "Error: %s", err.Error())
 		fmt.Fprintf(writer, "Error: %w", err)
 		return nil
 	}

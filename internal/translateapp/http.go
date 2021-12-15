@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 	"log"
 	"net/http"
+	"net/url"
 	s "translateapp/internal/server"
 )
 
@@ -22,7 +23,13 @@ func (client Client) LanguagePageHandler(writer http.ResponseWriter, request *ht
 }
 
 func (client Client) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
-	client.server.Service.Translate(writer)
+
+	data := url.Values{
+		"q":      {request.FormValue("q")},
+		"source": {request.FormValue("source")},
+		"target": {request.FormValue("target")},
+	}
+	client.server.Service.Translate(writer, data)
 
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
