@@ -25,7 +25,7 @@ func (service *Service) Languages(writer http.ResponseWriter) error {
 }
 
 func (service *Service) Translate(writer http.ResponseWriter, data url.Values) error {
-	resp, err := http.PostForm("http://172.19.0.2:5000/translate", data)
+	resp, err := http.PostForm("http://172.19.0.3:5000/translate", data)
 
 	if err != nil {
 		log.Fatal(err)
