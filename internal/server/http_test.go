@@ -1,4 +1,4 @@
-package translateapp
+package server
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -7,16 +7,14 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"testing"
-	"translateapp/internal/server"
 )
 
 func TestGetRequest(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/languages", nil)
 	w := httptest.NewRecorder()
-	var server server.Server
+	var server Server
 
-	service := Client{server: &server}
-	service.LanguagePageHandler(w, req)
+	server.LanguagePageHandler(w, req)
 	res := w.Result()
 
 	defer res.Body.Close()
@@ -34,9 +32,8 @@ func TestPostRequest(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/translate?source="+parm["source"][0]+"&target="+parm["target"][0]+"&word="+parm["word"][0], nil)
 	w := httptest.NewRecorder()
 
-	var server server.Server
-	service := Client{server: &server}
-	service.TranslatePageHandler(w, req)
+	var server Server
+	server.TranslatePageHandler(w, req)
 	res := w.Result()
 
 	defer res.Body.Close()

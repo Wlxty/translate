@@ -1,4 +1,13 @@
-package models
+package translateapp
+
+type Word struct {
+	TranslatedWord string
+}
+
+type Language struct {
+	Code string
+	Name string
+}
 
 func (l *Language) Languages() []Language {
 	languages := []Language{

@@ -6,13 +6,13 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"translateapp/internal/translateapp/models"
+	"translateapp/internal/translateapp"
 )
 
 type Service struct{}
 
 func (service *Service) Languages(writer http.ResponseWriter) error {
-	var languages models.Language
+	var languages translateapp.Language
 	output := languages.Languages()
 	jsonify, err := json.Marshal(output)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os/signal"
 	"syscall"
-	server "translateapp/internal/translateapp"
+	server "translateapp/internal/server"
 )
 
 func main() {
