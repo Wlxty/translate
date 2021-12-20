@@ -34,6 +34,7 @@ func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *ht
 	server.Service.Languages(writer)
 	logger := *server.Logger
 	logger.Level = "Info"
+
 	logger.Message(" GET request on localhost:8080/languages")
 }
 
@@ -51,15 +52,17 @@ func (server Server) TranslatePageHandler(writer http.ResponseWriter, request *h
 	logger.Message(" POST request on localhost:8080/translate")
 }
 
-func HandleRequests(port string) {
-	server := NewServer()
-
+func (server *Server) HandleRequests(port string) {
 	//create a new router
 	router := server.Router
 
 	Routes(router, server)
 	//start and listen to requests
 	log.Fatal(http.ListenAndServe(port, router))
+}
+
+func (server *Server) GetRouter() *mux.Router {
+	return server.Router
 }
 
 func Routes(router *mux.Router, server *Server) error {
