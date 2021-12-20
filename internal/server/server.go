@@ -6,33 +6,34 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"translateapp/internal/logger"
 	"translateapp/internal/service"
 )
 
 type Server struct {
 	Service *service.Service
 	Router  *mux.Router
-	Logger  *zap.Logger
+	Logger  *logger.Logger
 }
 
 func NewServer() *Server {
 
 	router := mux.NewRouter().StrictSlash(true)
 	var service service.Service
-	logger, _ := zap.NewProduction()
+	z, _ := zap.NewProduction()
+	logger := logger.Logger{z, "Info"}
+
 	return &Server{
 		Service: &service,
 		Router:  router,
-		Logger:  logger,
+		Logger:  &logger,
 	}
 }
 
 func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
 	server.Service.Languages(writer)
-	logger := server.Logger
-	defer logger.Sync()
-	sugar := logger.Sugar()
-	sugar.Infof("GET request on localhost:8080/languages")
+	logger := *server.Logger
+	logger.Message(" GET request on localhost:8080/languages")
 }
 
 func (server Server) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
@@ -45,9 +46,8 @@ func (server Server) TranslatePageHandler(writer http.ResponseWriter, request *h
 	server.Service.Translate(writer, data)
 
 	logger := server.Logger
-	defer logger.Sync()
-	sugar := logger.Sugar()
-	sugar.Infof("POST request on localhost:8080/translate")
+	logger.Level = "Debug"
+	logger.Message(" POST request on localhost:8080/translate")
 }
 
 func HandleRequests(port string) {
