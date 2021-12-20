@@ -33,6 +33,7 @@ func NewServer() *Server {
 func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
 	server.Service.Languages(writer)
 	logger := *server.Logger
+	logger.Level = "Info"
 	logger.Message(" GET request on localhost:8080/languages")
 }
 
