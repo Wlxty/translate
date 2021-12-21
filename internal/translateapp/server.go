@@ -1,55 +1,59 @@
-package server
+package translateapp
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"net/url"
-	"translateapp/internal/logger"
-	"translateapp/internal/service"
+	"translateapp/internal/libretranslate"
+	_ "translateapp/internal/logger"
 )
 
 type Server struct {
-	Service *service.Service
+	Service *Service
 	Router  *mux.Router
-	Logger  *logger.Logger
+	Logger  *zap.SugaredLogger
+	Libre   libretranslate.Client
 }
 
-func NewServer() *Server {
+func NewServer(client libretranslate.Client, logger *zap.SugaredLogger) *Server {
 
 	router := mux.NewRouter().StrictSlash(true)
-	var service service.Service
-	z, _ := zap.NewProduction()
-	logger := logger.Logger{z, "Info"}
+	var service Service
 
 	return &Server{
 		Service: &service,
 		Router:  router,
-		Logger:  &logger,
+		Logger:  logger,
+		Libre:   client,
 	}
 }
 
 func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
-	server.Service.Languages(writer)
-	logger := *server.Logger
-	logger.Level = "Info"
+	data, err := server.Service.Languages()
 
-	logger.Message(" GET request on localhost:8080/languages")
+	server.Logger.Debug("GET request on localhost:8080/languages")
+	json, err := json.Marshal(data)
+	if err != nil {
+		fmt.Fprintf(writer, "Error: %s", err.Error())
+	}
+
+	fmt.Fprintf(writer, string(json))
 }
 
 func (server Server) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
-
 	data := url.Values{
 		"q":      {request.FormValue("q")},
 		"source": {request.FormValue("source")},
 		"target": {request.FormValue("target")},
 	}
-	server.Service.Translate(writer, data)
+	translate, _ := server.Service.Translate(data, server.Libre.Host)
 
-	logger := server.Logger
-	logger.Level = "Debug"
-	logger.Message(" POST request on localhost:8080/translate")
+	server.Libre.Logger.Debug("POST request on localhost:8080/translate")
+	fmt.Fprintf(writer, translate)
 }
 
 func (server *Server) HandleRequests(port string) {
@@ -59,10 +63,6 @@ func (server *Server) HandleRequests(port string) {
 	Routes(router, server)
 	//start and listen to requests
 	log.Fatal(http.ListenAndServe(port, router))
-}
-
-func (server *Server) GetRouter() *mux.Router {
-	return server.Router
 }
 
 func Routes(router *mux.Router, server *Server) error {
