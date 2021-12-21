@@ -19,7 +19,12 @@ func (service *Service) Languages() ([]Language, error) {
 	return languages.Languages(), nil
 }
 
-func (service *Service) Translate(data url.Values) (string, error) {
+func (service *Service) Translate(q string, source string, target string) (string, error) {
+	data := url.Values{
+		"q":      {q},
+		"source": {source},
+		"target": {target},
+	}
 	resp, err := http.PostForm(service.Libre.Host+"translate", data)
 
 	if err != nil {

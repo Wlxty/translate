@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"net/url"
 	_ "translateapp/internal/logger"
 )
 
@@ -27,7 +26,9 @@ func NewServer(service *Service) *Server {
 
 func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
 	data, err := server.Service.Languages()
-
+	if err != nil {
+		fmt.Fprintf(writer, "Error: %s", err.Error())
+	}
 	server.Service.Logger.Debug("GET request on localhost:8080/languages")
 	json, err := json.Marshal(data)
 	if err != nil {
@@ -38,12 +39,7 @@ func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *ht
 }
 
 func (server Server) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
-	data := url.Values{
-		"q":      {request.FormValue("q")},
-		"source": {request.FormValue("source")},
-		"target": {request.FormValue("target")},
-	}
-	translate, _ := server.Service.Translate(data)
+	translate, _ := server.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
 
 	server.Service.Libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, translate)
