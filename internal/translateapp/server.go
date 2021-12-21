@@ -4,38 +4,31 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"net/url"
-	"translateapp/internal/libretranslate"
 	_ "translateapp/internal/logger"
 )
 
 type Server struct {
 	Service *Service
 	Router  *mux.Router
-	Logger  *zap.SugaredLogger
-	Libre   libretranslate.Client
 }
 
-func NewServer(client libretranslate.Client, logger *zap.SugaredLogger) *Server {
+func NewServer(service *Service) *Server {
 
 	router := mux.NewRouter().StrictSlash(true)
-	var service Service
 
 	return &Server{
-		Service: &service,
+		Service: service,
 		Router:  router,
-		Logger:  logger,
-		Libre:   client,
 	}
 }
 
 func (server Server) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
 	data, err := server.Service.Languages()
 
-	server.Logger.Debug("GET request on localhost:8080/languages")
+	server.Service.Logger.Debug("GET request on localhost:8080/languages")
 	json, err := json.Marshal(data)
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
@@ -50,9 +43,9 @@ func (server Server) TranslatePageHandler(writer http.ResponseWriter, request *h
 		"source": {request.FormValue("source")},
 		"target": {request.FormValue("target")},
 	}
-	translate, _ := server.Service.Translate(data, server.Libre.Host)
+	translate, _ := server.Service.Translate(data)
 
-	server.Libre.Logger.Debug("POST request on localhost:8080/translate")
+	server.Service.Libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, translate)
 }
 

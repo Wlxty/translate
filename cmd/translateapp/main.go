@@ -12,6 +12,10 @@ func main() {
 
 	ltHost := "http://libretranslate:5000/"
 	client := libretranslate.NewClient(logger, ltHost)
-	srv := translateapp.NewServer(*client, logger)
+	service := translateapp.Service{
+		logger,
+		*client,
+	}
+	srv := translateapp.NewServer(&service)
 	srv.HandleRequests(":8080")
 }
