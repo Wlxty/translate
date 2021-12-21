@@ -1,4 +1,4 @@
-package server
+package translateapp
 
 import (
 	"github.com/stretchr/testify/assert"

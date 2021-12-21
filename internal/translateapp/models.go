@@ -1,5 +1,9 @@
 package translateapp
 
+type Response struct {
+	TranslatedWord string
+}
+
 type Word struct {
 	TranslatedWord string
 }
@@ -7,6 +11,7 @@ type Word struct {
 type Language struct {
 	Code string
 	Name string
+	// Stats int // For the future.
 }
 
 func (l *Language) Languages() []Language {
