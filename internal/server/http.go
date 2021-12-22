@@ -1,4 +1,4 @@
-package translateapp
+package server
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 	"time"
 	"translateapp/internal/libretranslate"
 	"translateapp/internal/logger"
+	"translateapp/internal/translateapp"
 )
 
 func GetServer() *http.Server {
@@ -18,11 +19,11 @@ func GetServer() *http.Server {
 	logger := logger.NewLogger("debug", true)
 	ltHost := "http://libretranslate:5000/"
 	client := libretranslate.NewClient(logger, ltHost)
-	service := Service{
+	service := translateapp.Service{
 		logger,
 		*client,
 	}
-	api := NewServer(&service)
+	api := translateapp.NewServer(&service)
 	api.HandleRequests(":8080")
 	server := http.Server{
 		Addr:         listenAddr,
