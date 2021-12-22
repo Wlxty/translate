@@ -14,6 +14,13 @@ type Server struct {
 	Router  *mux.Router
 }
 
+type Handler interface {
+	ServerHTTP(syncer http.ResponseWriter, request *http.Request)
+	LanguagePageHandler(writer http.ResponseWriter, request *http.Request)
+	TranslatePageHandler(writer http.ResponseWriter, request *http.Request)
+	HandleRequests(port string)
+}
+
 func (server Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	server.Router.ServeHTTP(writer, request)
 }

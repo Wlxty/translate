@@ -14,6 +14,11 @@ type Service struct {
 	Libre  libretranslate.Client
 }
 
+type Servicer interface {
+	Languages() ([]Language, error)
+	Translate(q string, source string, target string) (string, error)
+}
+
 func (service *Service) Languages() ([]Language, error) {
 	var languages Language
 	return languages.Languages(), nil

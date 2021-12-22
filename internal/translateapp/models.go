@@ -9,6 +9,10 @@ type Language struct {
 	Name string
 }
 
+type Translate interface {
+	Languages() []Language
+}
+
 func (l *Language) Languages() []Language {
 	languages := []Language{
 		Language{"en", "English"},
@@ -22,9 +26,4 @@ func NewWord(word string) Word {
 		word,
 	}
 	return data
-}
-
-func (repo Word) Translate() Word {
-	src := repo
-	return src
 }
