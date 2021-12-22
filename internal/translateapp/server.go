@@ -14,6 +14,10 @@ type Server struct {
 	Router  *mux.Router
 }
 
+func (server Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	server.Router.ServeHTTP(writer, request)
+}
+
 func NewServer(service *Service) *Server {
 
 	router := mux.NewRouter().StrictSlash(true)

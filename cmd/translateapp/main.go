@@ -1,21 +1,15 @@
 package main
 
 import (
-	"translateapp/internal/libretranslate"
-	"translateapp/internal/logger"
-	"translateapp/internal/translateapp"
+	"fmt"
+	"os"
+	"translateapp/internal/server"
 )
 
 func main() {
 	//graceful shutdown to do
-	logger := logger.NewLogger("debug", true)
-
-	ltHost := "http://libretranslate:5000/"
-	client := libretranslate.NewClient(logger, ltHost)
-	service := translateapp.Service{
-		logger,
-		*client,
+	if err := server.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
 	}
-	srv := translateapp.NewServer(&service)
-	srv.HandleRequests(":8080")
 }
