@@ -23,7 +23,7 @@ func GetServer() *http.Server {
 		logger,
 		*client,
 	}
-	api := translateapp.NewServer(&service)
+	api := translateapp.NewApp(&service)
 	api.HandleRequests(":8080")
 	server := http.Server{
 		Addr:         listenAddr,

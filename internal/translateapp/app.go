@@ -25,7 +25,7 @@ func (app App) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	app.Router.ServeHTTP(writer, request)
 }
 
-func NewServer(service *Service) *App {
+func NewApp(service *Service) *App {
 
 	router := mux.NewRouter().StrictSlash(true)
 
