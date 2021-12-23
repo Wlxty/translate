@@ -1,7 +1,7 @@
 package translateapp
 
 type Word struct {
-	TranslatedWord string
+	translatedText string
 }
 
 type Language struct {

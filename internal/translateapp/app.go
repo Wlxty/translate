@@ -50,6 +50,7 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 
 func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
 	translate, _ := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
+
 	app.Service.Libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, translate)
 }

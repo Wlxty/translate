@@ -12,8 +12,8 @@ type Service struct {
 }
 
 type Servicer interface {
-	Languages() (string, error)
-	Translate(q string, source string, target string) (string, error)
+	Languages() ([]Language, error)
+	Translate(q string, source string, target string) (Word, error)
 }
 
 func (service *Service) Languages() ([]Language, error) {
