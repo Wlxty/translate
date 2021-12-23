@@ -21,7 +21,7 @@ type Handler interface {
 	HandleRequests(port string)
 }
 
-func (app App) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (app *App) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	app.Router.ServeHTTP(writer, request)
 }
 
@@ -35,23 +35,21 @@ func NewApp(service *Service) *App {
 	}
 }
 
-func (app App) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
+func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
 	data, err := app.Service.Languages()
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
-	app.Service.Logger.Debug("GET request on localhost:8080/languages")
 	json, err := json.Marshal(data)
+	app.Service.Logger.Debug("GET request on localhost:8080/languages")
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
-
 	fmt.Fprintf(writer, string(json))
 }
 
-func (app App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
+func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
 	translate, _ := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
-
 	app.Service.Libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, translate)
 }
