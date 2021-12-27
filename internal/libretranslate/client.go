@@ -14,11 +14,13 @@ type Client struct {
 	Host   string
 }
 
+// Constructor for libretranslate client
 func NewClient(Logger *zap.SugaredLogger, Host string) *Client {
 	client := Client{Logger, Host}
 	return &client
 }
 
+// PostForm to get translation
 func (client *Client) Translate(q string, source string, target string) (string, error) {
 	data := url.Values{
 		"q":      {q},
@@ -40,6 +42,7 @@ func (client *Client) Translate(q string, source string, target string) (string,
 	return string(jsonify), err
 }
 
+// Get request, read all languages in libretranslate server
 func (client *Client) Languages() (string, error) {
 	resp, err := http.Get(client.Host + "languages")
 	if err != nil {

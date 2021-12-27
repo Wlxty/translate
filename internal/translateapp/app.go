@@ -21,10 +21,12 @@ type Handler interface {
 	HandleRequests(port string)
 }
 
+// Starting Http server on gorilla mux router
 func (app *App) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	app.Router.ServeHTTP(writer, request)
 }
 
+// Starting application
 func NewApp(service *Service) *App {
 
 	router := mux.NewRouter().StrictSlash(true)
@@ -35,6 +37,7 @@ func NewApp(service *Service) *App {
 	}
 }
 
+// Request to fetch all languages from Libretranslate service.
 func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
 	data, err := app.Service.Languages()
 	if err != nil {
@@ -48,6 +51,7 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 	fmt.Fprintf(writer, string(json))
 }
 
+// Request to get translation from Libretranslate service.
 func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
 	translate, _ := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
 
@@ -55,6 +59,7 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 	fmt.Fprintf(writer, translate)
 }
 
+// Method to handle all requests
 func (app *App) HandleRequests(port string) {
 	//create a new router
 	router := app.Router
@@ -64,6 +69,8 @@ func (app *App) HandleRequests(port string) {
 	log.Fatal(http.ListenAndServe(port, router))
 }
 
+// Routing,
+//if you want to add new route, add it here
 func Routes(router *mux.Router, app *App) error {
 	router.HandleFunc("/languages", app.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", app.TranslatePageHandler).Methods("POST")

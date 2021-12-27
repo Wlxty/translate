@@ -14,6 +14,7 @@ import (
 	"translateapp/internal/translateapp"
 )
 
+// Starting new http server.
 func GetServer() *http.Server {
 	listenAddr := ":8080"
 	logger := logger.NewLogger("debug", true)
@@ -35,6 +36,8 @@ func GetServer() *http.Server {
 	return &server
 }
 
+//If you want to run api
+// Running api in go routine and use of graceful shutdown
 func Run() error {
 	server := GetServer()
 	serverErrors := make(chan error, 1)
