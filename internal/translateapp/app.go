@@ -48,7 +48,7 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
-	fmt.Fprintf(writer, string(json))
+	fmt.Fprintf(writer, "%s", string(json))
 }
 
 // Request to get translation from Libretranslate service.
@@ -56,7 +56,7 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 	translate, _ := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
 
 	app.Service.Libre.Logger.Debug("POST request on localhost:8080/translate")
-	fmt.Fprintf(writer, translate)
+	fmt.Fprintf(writer, "%s", translate)
 }
 
 // Method to handle all requests
@@ -71,8 +71,7 @@ func (app *App) HandleRequests(port string) {
 
 // Routing,
 //if you want to add new route, add it here
-func Routes(router *mux.Router, app *App) error {
+func Routes(router *mux.Router, app *App) {
 	router.HandleFunc("/languages", app.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", app.TranslatePageHandler).Methods("POST")
-	return nil
 }

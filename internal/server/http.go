@@ -21,8 +21,8 @@ func GetServer() *http.Server {
 	ltHost := "http://libretranslate:5000/"
 	client := libretranslate.NewClient(logger, ltHost)
 	service := translateapp.Service{
-		logger,
-		*client,
+		Logger: logger,
+		Libre:  *client,
 	}
 	api := translateapp.NewApp(&service)
 	api.HandleRequests(":8080")

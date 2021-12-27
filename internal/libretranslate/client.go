@@ -35,7 +35,11 @@ func (client *Client) Translate(q string, source string, target string) (string,
 
 	var res map[string]interface{}
 
-	json.NewDecoder(resp.Body).Decode(&res)
+	j := json.NewDecoder(resp.Body).Decode(&res)
+	if j != nil {
+		client.Logger.Debug("Service Languages: Not valid Json")
+	}
+	client.Logger.Debug("Service Languages works fine")
 
 	jsonify, err := json.Marshal(res)
 

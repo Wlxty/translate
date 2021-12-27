@@ -21,7 +21,11 @@ type Servicer interface {
 func (service *Service) Languages() ([]Language, error) {
 	data, err := service.Libre.Languages()
 	languages := []Language{}
-	json.Unmarshal([]byte(data), &languages)
+	json := json.Unmarshal([]byte(data), &languages)
+	if json != nil {
+		service.Logger.Debug("Service Languages: Not valid Json")
+	}
+	service.Logger.Debug("Service Languages works fine")
 	return languages, err
 }
 
