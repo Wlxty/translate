@@ -15,15 +15,17 @@ type Service struct {
 type Servicer interface {
 	Languages() ([]Language, error)
 	Translate(q string, source string, target string) (string, error)
-	GetLibre() libretranslate.Client
+	GetLibre() *libretranslate.Client
 }
 
-func (service *Service) GetLibre() libretranslate.Client {
-	return service.Libre
+func (service *Service) GetLibre() *libretranslate.Client {
+	return &service.Libre
 }
 
-func (service *Service) Up() libretranslate.Client {
-	var wrapper Servicer = &Service{service.Logger, service.Libre}
+func (service *Service) Up() *libretranslate.Client {
+	var (
+		wrapper Servicer = &Service{service.Logger, service.Libre}
+	)
 	libre := wrapper.GetLibre()
 	return libre
 }
