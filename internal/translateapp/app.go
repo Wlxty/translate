@@ -15,10 +15,7 @@ type App struct {
 }
 
 type Handler interface {
-	ServerHTTP(syncer http.ResponseWriter, request *http.Request)
-	LanguagePageHandler(writer http.ResponseWriter, request *http.Request)
-	TranslatePageHandler(writer http.ResponseWriter, request *http.Request)
-	HandleRequests(port string)
+	NewApp(service *Service) *App
 }
 
 // Starting Http server on gorilla mux router
@@ -63,15 +60,14 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 func (app *App) HandleRequests(port string) {
 	//create a new router
 	router := app.Router
-
-	Routes(router, app)
+	app.Routes(router)
 	//start and listen to requests
 	log.Fatal(http.ListenAndServe(port, router))
 }
 
 // Routing,
 //if you want to add new route, add it here
-func Routes(router *mux.Router, app *App) {
+func (app *App) Routes(router *mux.Router) {
 	router.HandleFunc("/languages", app.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", app.TranslatePageHandler).Methods("POST")
 }
