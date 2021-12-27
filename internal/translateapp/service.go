@@ -22,10 +22,15 @@ func (service *Service) GetLibre() libretranslate.Client {
 	return service.Libre
 }
 
-// Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
-func (service *Service) Languages() ([]Language, error) {
+func (service *Service) Up() libretranslate.Client {
 	var wrapper Servicer = &Service{service.Logger, service.Libre}
 	libre := wrapper.GetLibre()
+	return libre
+}
+
+// Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
+func (service *Service) Languages() ([]Language, error) {
+	libre := service.Up()
 	data, err := libre.Languages()
 
 	languages := []Language{}
@@ -42,7 +47,6 @@ func (service *Service) Languages() ([]Language, error) {
 //source = language to translate from,
 //target = language to translate to
 func (service *Service) Translate(q string, source string, target string) (string, error) {
-	var wrapper Servicer = &Service{service.Logger, service.Libre}
-	libre := wrapper.GetLibre()
+	libre := service.Up()
 	return libre.Translate(q, source, target)
 }
