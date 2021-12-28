@@ -16,6 +16,7 @@ type Servicer interface {
 	Languages() ([]Language, error)
 	Translate(q string, source string, target string) (string, error)
 	GetLibre() *libretranslate.Client
+	Up() *libretranslate.Client
 }
 
 func (service *Service) GetLibre() *libretranslate.Client {
@@ -32,7 +33,9 @@ func (service *Service) Up() *libretranslate.Client {
 
 // Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
 func (service *Service) Languages() ([]Language, error) {
-	libre := service.Up()
+	var (
+		libre libretranslate.Libre = service.Up()
+	)
 	data, err := libre.Languages()
 
 	languages := []Language{}
@@ -49,6 +52,8 @@ func (service *Service) Languages() ([]Language, error) {
 //source = language to translate from,
 //target = language to translate to
 func (service *Service) Translate(q string, source string, target string) (string, error) {
-	libre := service.Up()
+	var (
+		libre libretranslate.Libre = service.Up()
+	)
 	return libre.Translate(q, source, target)
 }

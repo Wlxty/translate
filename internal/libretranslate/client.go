@@ -14,6 +14,11 @@ type Client struct {
 	Host   string
 }
 
+type Libre interface {
+	Translate(q string, source string, target string) (string, error)
+	Languages() (string, error)
+}
+
 // Constructor for libretranslate client
 func NewClient(Logger *zap.SugaredLogger, Host string) *Client {
 	client := Client{Logger, Host}
