@@ -15,7 +15,11 @@ type App struct {
 }
 
 type Handler interface {
-	NewApp(service *Service) *App
+	ServeHTTP(writer http.ResponseWriter, request *http.Request)
+	LanguagePageHandler(writer http.ResponseWriter, request *http.Request)
+	TranslatePageHandler(writer http.ResponseWriter, request *http.Request)
+	HandleRequests(port string)
+	Routes(router *mux.Router)
 }
 
 // Starting Http server on gorilla mux router
