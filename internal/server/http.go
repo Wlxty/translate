@@ -14,8 +14,9 @@ import (
 	"translateapp/internal/translateapp"
 )
 
-// Starting new http server.
-func GetServer() *http.Server {
+//If you want to run api
+// Running api in go routine and use of graceful shutdown
+func Run() error {
 	listenAddr := ":8080"
 	logger := logger.NewLogger("debug", true)
 	ltHost := "http://libretranslate:5000/"
@@ -33,13 +34,7 @@ func GetServer() *http.Server {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  15 * time.Second,
 	}
-	return &server
-}
 
-//If you want to run api
-// Running api in go routine and use of graceful shutdown
-func Run() error {
-	server := GetServer()
 	serverErrors := make(chan error, 1)
 
 	go func() {
