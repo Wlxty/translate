@@ -31,10 +31,6 @@ func (service *Service) Translate(q string, source string, target string) (strin
 	return service.Cached.Translate(q, source, target)
 }
 
-func (service *Service) GetLanguages() (interface{}, error) {
-	return service.Cached.GetLanguages()
-}
-
 // Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
 func (service *Service) Languages() (string, error, string) {
 	return service.Cached.Languages()

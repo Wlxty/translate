@@ -66,6 +66,11 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 // Request to get translation from Libretranslate service.
 func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
 	translate, _ := app.GetService().Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
+	q := request.FormValue("q")
+	_, cached, _ := app.Service.Cached.GetCache().Proxy.Get(q)
+
+	app.Service.Logger.Debug("Key: "+q, " Cached value: "+cached.(string))
+
 	libre := app.Service.Cached.GetLibre()
 	libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, "%s", translate)

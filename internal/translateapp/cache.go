@@ -31,7 +31,12 @@ func (c *Cache) GetCatche() cache.Through {
 }
 
 func (c *Cache) Translate(q string, source string, target string) (string, error) {
-	return c.Libre.Translate(q, source, target)
+	value, err := c.Cache.Get(q, func() (interface{}, error) {
+		var translator, _ = c.Libre.Translate(q, source, target)
+		return translator, nil
+
+	})
+	return value.(string), err
 }
 
 func (c *Cache) GetLanguages() (interface{}, error) {
