@@ -21,11 +21,11 @@ func Run() error {
 	logger := logger.NewLogger("debug", true)
 	ltHost := "http://libretranslate:5000/"
 	client := libretranslate.NewClient(logger, ltHost)
-	service := translateapp.Service{
+	service := &translateapp.Service{
 		Logger: logger,
 		Libre:  *client,
 	}
-	api := translateapp.NewApp(&service)
+	api := translateapp.NewApp(service)
 	api.HandleRequests(":8080")
 	server := http.Server{
 		Addr:         listenAddr,

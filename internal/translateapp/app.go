@@ -20,6 +20,16 @@ type Handler interface {
 	TranslatePageHandler(writer http.ResponseWriter, request *http.Request)
 	HandleRequests(port string)
 	Routes(router *mux.Router)
+	GetRouter() *mux.Router
+	GetService() *Service
+}
+
+func (app *App) GetRouter() *mux.Router {
+	return app.Router
+}
+
+func (app *App) GetService() *Service {
+	return app.Service
 }
 
 // Starting Http server on gorilla mux router
@@ -40,7 +50,7 @@ func NewApp(service *Service) *App {
 
 // Request to fetch all languages from Libretranslate service.
 func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
-	data, err := app.Service.Languages()
+	data, err := app.GetService().Languages()
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
@@ -54,7 +64,7 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 
 // Request to get translation from Libretranslate service.
 func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
-	translate, _ := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
+	translate, _ := app.GetService().Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
 
 	app.Service.Libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, "%s", translate)
@@ -63,7 +73,10 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 // Method to handle all requests
 func (app *App) HandleRequests(port string) {
 	//create a new router
-	router := app.Router
+	var (
+		handler Handler = app
+	)
+	router := handler.GetRouter()
 	app.Routes(router)
 	//start and listen to requests
 	log.Fatal(http.ListenAndServe(port, router))
@@ -72,6 +85,9 @@ func (app *App) HandleRequests(port string) {
 // Routing,
 //if you want to add new route, add it here
 func (app *App) Routes(router *mux.Router) {
-	router.HandleFunc("/languages", app.LanguagePageHandler).Methods("GET")
-	router.HandleFunc("/translate", app.TranslatePageHandler).Methods("POST")
+	var (
+		handler Handler = app
+	)
+	router.HandleFunc("/languages", handler.LanguagePageHandler).Methods("GET")
+	router.HandleFunc("/translate", handler.TranslatePageHandler).Methods("POST")
 }

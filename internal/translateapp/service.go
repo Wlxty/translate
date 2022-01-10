@@ -16,34 +16,41 @@ type Servicer interface {
 	Languages() ([]Language, error)
 	Translate(q string, source string, target string) (string, error)
 	GetLibre() *libretranslate.Client
-	Up() *libretranslate.Client
+	Interface() *libretranslate.Client
 }
 
-func (service *Service) GetLibre() *libretranslate.Client {
-	return &service.Libre
+func NewService(logger *zap.SugaredLogger, libre libretranslate.Client) *Service {
+	return &Service{
+		Logger: logger,
+		Libre:  libre,
+	}
 }
 
-func (service *Service) Up() *libretranslate.Client {
+func (cache *Service) GetLibre() *libretranslate.Client {
+	return &cache.Libre
+}
+
+func (cache *Service) Interface() *libretranslate.Client {
 	var (
-		wrapper Servicer = &Service{service.Logger, service.Libre}
+		wrapper Servicer = NewService(cache.Logger, cache.Libre)
 	)
 	libre := wrapper.GetLibre()
 	return libre
 }
 
 // Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
-func (service *Service) Languages() ([]Language, error) {
+func (cache *Service) Languages() ([]Language, error) {
 	var (
-		libre libretranslate.Libre = service.Up()
+		libre libretranslate.Libre = cache.Interface()
 	)
 	data, err := libre.Languages()
 
-	languages := []Language{}
+	var languages []Language
 	json := json.Unmarshal([]byte(data), &languages)
 	if json != nil {
-		service.Logger.Debug("Service Languages: Not valid Json")
+		cache.Logger.Debug("Service Languages: Not valid Json")
 	}
-	service.Logger.Debug("Service Languages works fine")
+	cache.Logger.Debug("Service Languages works fine")
 	return languages, err
 }
 
@@ -51,9 +58,9 @@ func (service *Service) Languages() ([]Language, error) {
 //q = word to translate,
 //source = language to translate from,
 //target = language to translate to
-func (service *Service) Translate(q string, source string, target string) (string, error) {
+func (cache *Service) Translate(q string, source string, target string) (string, error) {
 	var (
-		libre libretranslate.Libre = service.Up()
+		libre libretranslate.Libre = cache.Interface()
 	)
 	return libre.Translate(q, source, target)
 }

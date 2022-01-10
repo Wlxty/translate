@@ -17,6 +17,16 @@ type Client struct {
 type Libre interface {
 	Translate(q string, source string, target string) (string, error)
 	Languages() (string, error)
+	GetHost() string
+	GetLogger() *zap.SugaredLogger
+}
+
+func (c *Client) GetHost() string {
+	return c.Host
+}
+
+func (c *Client) GetLogger() *zap.SugaredLogger {
+	return c.Logger
 }
 
 // Constructor for libretranslate client
@@ -27,42 +37,48 @@ func NewClient(Logger *zap.SugaredLogger, Host string) *Client {
 
 // PostForm to get translation
 func (client *Client) Translate(q string, source string, target string) (string, error) {
-	data := url.Values{
+	input := url.Values{
 		"q":      {q},
 		"source": {source},
 		"target": {target},
 	}
-	resp, err := http.PostForm(client.Host+"translate", data)
+	var (
+		libre Libre = client
+	)
+	data, err := http.PostForm(libre.GetHost()+"translate", input)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var res map[string]interface{}
+	var response map[string]interface{}
 
-	j := json.NewDecoder(resp.Body).Decode(&res)
+	j := json.NewDecoder(data.Body).Decode(&response)
 	if j != nil {
 		client.Logger.Debug("Service Languages: Not valid Json")
 	}
 	client.Logger.Debug("Service Languages works fine")
 
-	jsonify, err := json.Marshal(res)
+	jsonify, err := json.Marshal(response)
 
 	return string(jsonify), err
 }
 
 // Get request, read all languages in libretranslate server
 func (client *Client) Languages() (string, error) {
-	resp, err := http.Get(client.Host + "languages")
+	var (
+		libre Libre = client
+	)
+	data, err := http.Get(libre.GetHost() + "languages")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	//We Read the response body on the line below.
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(data.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	//Convert the body to type string
-	sb := string(body)
-	return sb, err
+	response := string(body)
+	return response, err
 }
