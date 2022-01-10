@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"translateapp/internal/cache"
 	"translateapp/internal/libretranslate"
 	"translateapp/internal/logger"
 	"translateapp/internal/translateapp"
@@ -21,9 +22,12 @@ func Run() error {
 	logger := logger.NewLogger("debug", true)
 	ltHost := "http://libretranslate:5000/"
 	client := libretranslate.NewClient(logger, ltHost)
+
+	rt := cache.Through{Proxy: cache.NewInMemoryProxy()}
 	service := &translateapp.Service{
 		Logger: logger,
 		Libre:  *client,
+		Cache:  rt,
 	}
 	api := translateapp.NewApp(service)
 	api.HandleRequests(":8080")
