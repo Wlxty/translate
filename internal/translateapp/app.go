@@ -3,10 +3,11 @@ package translateapp
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	_ "translateapp/internal/logger"
+
+	"github.com/gorilla/mux"
 )
 
 type App struct {
@@ -37,8 +38,13 @@ func (app *App) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	app.Router.ServeHTTP(writer, request)
 }
 
+type Servicer interface {
+	Languages() ([]Language, error)
+	Translate(q string, source string, target string) (string, error)
+}
+
 // Starting application
-func NewApp(service *Service) *App {
+func NewApp(service Servicer) *App {
 
 	router := mux.NewRouter().StrictSlash(true)
 

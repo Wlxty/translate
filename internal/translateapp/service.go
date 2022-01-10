@@ -2,24 +2,25 @@ package translateapp
 
 import (
 	"encoding/json"
-	"go.uber.org/zap"
 	"translateapp/internal/libretranslate"
+
+	"go.uber.org/zap"
 )
+
+type Translator interface {
+	// Translate returns translated text.
+	Translate(text, from, to string) (string, error)
+	Languages() ([]Language, error)
+}
 
 //Struct of Service that got Libretranslate client and logger
 type Service struct {
 	Logger *zap.SugaredLogger
-	Libre  libretranslate.Client
+	// Libre  libretranslate.Client
+	Libre Translator
 }
 
-type Servicer interface {
-	Languages() ([]Language, error)
-	Translate(q string, source string, target string) (string, error)
-	GetLibre() *libretranslate.Client
-	Interface() *libretranslate.Client
-}
-
-func NewService(logger *zap.SugaredLogger, libre libretranslate.Client) *Service {
+func NewService(logger *zap.SugaredLogger, libre Translator) *Service {
 	return &Service{
 		Logger: logger,
 		Libre:  libre,
