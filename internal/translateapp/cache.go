@@ -6,8 +6,12 @@ import (
 )
 
 type Cache struct {
-	Libre libretranslate.Client
+	Libre libretranslate.Libre
 	Cache cache.Through
+}
+
+func (c *Cache) GetCache() cache.Through {
+	return c.Cache
 }
 
 type Cacher interface {
@@ -19,11 +23,11 @@ type Cacher interface {
 }
 
 func (c *Cache) GetLibre() libretranslate.Client {
-	return c.Libre
+	return *c.Libre.GetLibre()
 }
 
 func (c *Cache) GetCatche() cache.Through {
-	return c.Cache
+	return c.GetCatche()
 }
 
 func (c *Cache) Translate(q string, source string, target string) (string, error) {

@@ -23,10 +23,11 @@ func Run() error {
 	ltHost := "http://libretranslate:5000/"
 	client := libretranslate.NewClient(logger, ltHost)
 	rt := cache.Through{Proxy: cache.NewInMemoryProxy()}
-	cached := translateapp.Cache{*client, rt}
+	cached := translateapp.Cache{client, rt}
+	var cacher translateapp.Cacher = &cached
 	service := &translateapp.Service{
 		Logger: logger,
-		Cached: cached,
+		Cached: cacher,
 	}
 	api := translateapp.NewApp(service)
 	api.HandleRequests(":8080")

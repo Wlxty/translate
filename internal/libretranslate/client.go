@@ -19,8 +19,12 @@ type Libre interface {
 	Languages() (string, error)
 	GetHost() string
 	GetLogger() *zap.SugaredLogger
+	GetLibre() *Client
 }
 
+func (c *Client) GetLibre() *Client {
+	return c
+}
 func (c *Client) GetHost() string {
 	return c.Host
 }

@@ -8,7 +8,7 @@ import (
 //Struct of Service that got Libretranslate client and logger
 type Service struct {
 	Logger *zap.SugaredLogger
-	Cached Cache
+	Cached Cacher
 }
 
 type Servicer interface {
@@ -16,10 +16,10 @@ type Servicer interface {
 	Translate(q string, source string, target string) (string, error)
 }
 
-func NewService(logger *zap.SugaredLogger, cashed Cache) *Service {
+func NewService(logger *zap.SugaredLogger, cacher Cacher) *Service {
 	return &Service{
 		Logger: logger,
-		Cached: cashed,
+		Cached: cacher,
 	}
 }
 

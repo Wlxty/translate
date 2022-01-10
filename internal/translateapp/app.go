@@ -54,7 +54,7 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
 	app.Service.Logger.Debug("GET request on localhost:8080/languages")
-	_, cached, _ := app.Service.Cached.Cache.Proxy.Get(cache)
+	_, cached, _ := app.Service.Cached.GetCache().Proxy.Get(cache)
 	app.Service.Logger.Debug("Key: "+cache, " Cached value: "+cached.(string))
 
 	if err != nil {
@@ -66,8 +66,8 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 // Request to get translation from Libretranslate service.
 func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
 	translate, _ := app.GetService().Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
-
-	app.Service.Cached.Libre.Logger.Debug("POST request on localhost:8080/translate")
+	libre := app.Service.Cached.GetLibre()
+	libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, "%s", translate)
 }
 
