@@ -33,7 +33,10 @@ func (p *InMemoryProxy) Get(key string) (bool, interface{}, error) {
 
 // Set sets a value to the map object as a caches
 func (p *InMemoryProxy) Set(key string, val interface{}, expire time.Time) error {
-	p.memories[key] = val
-	p.timeouts[key] = expire
+	_, ok := p.memories[key]
+	if !ok {
+		p.memories[key] = val
+		p.timeouts[key] = expire
+	}
 	return nil
 }

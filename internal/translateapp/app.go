@@ -56,7 +56,6 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 	app.Service.Logger.Debug("GET request on localhost:8080/languages")
 	_, cached, _ := app.Service.Cached.GetCache().Proxy.Get(cache)
 	app.Service.Logger.Debug("Key: "+cache, " Cached value: "+cached.(string))
-
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
@@ -70,7 +69,6 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 	_, cached, _ := app.Service.Cached.GetCache().Proxy.Get(q)
 
 	app.Service.Logger.Debug("Key: "+q, " Cached value: "+cached.(string))
-
 	libre := app.Service.Cached.GetLibre()
 	libre.Logger.Debug("POST request on localhost:8080/translate")
 	fmt.Fprintf(writer, "%s", translate)
