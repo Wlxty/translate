@@ -46,10 +46,7 @@ func (client *Client) Translate(q string, source string, target string) (string,
 		"source": {source},
 		"target": {target},
 	}
-	var (
-		libre Libre = client
-	)
-	data, err := http.PostForm(libre.GetHost()+"translate", input)
+	data, err := http.PostForm(client.GetHost()+"translate", input)
 
 	if err != nil {
 		log.Fatal(err)
@@ -70,10 +67,7 @@ func (client *Client) Translate(q string, source string, target string) (string,
 
 // Get request, read all languages in libretranslate server
 func (client *Client) Languages() (string, error) {
-	var (
-		libre Libre = client
-	)
-	data, err := http.Get(libre.GetHost() + "languages")
+	data, err := http.Get(client.GetHost() + "languages")
 	if err != nil {
 		log.Fatalln(err)
 	}

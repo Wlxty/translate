@@ -20,8 +20,7 @@ import (
 func Run() error {
 	listenAddr := ":8080"
 	logger := logger.NewLogger("debug", true)
-	ltHost := "http://libretranslate:5000/"
-	client := libretranslate.NewClient(logger, ltHost)
+	client := libretranslate.NewClient(logger, "http://libretranslate:5000/")
 	rt := cache.Through{Proxy: cache.NewInMemoryProxy()}
 	cached := translateapp.Cache{client, rt}
 	var cacher translateapp.Cacher = &cached

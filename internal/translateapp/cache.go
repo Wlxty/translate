@@ -1,6 +1,7 @@
 package translateapp
 
 import (
+	"time"
 	"translateapp/internal/cache"
 	"translateapp/internal/libretranslate"
 )
@@ -35,7 +36,7 @@ func (c *Cache) Translate(q string, source string, target string) (string, error
 		var translator, _ = c.Libre.Translate(q, source, target)
 		return translator, nil
 
-	})
+	}, time.Now().AddDate(0, 0, 1))
 	return value.(string), err
 }
 
@@ -46,6 +47,6 @@ func (c *Cache) GetLanguages() (interface{}, error) {
 // Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
 func (c *Cache) Languages() (string, error, string) {
 	cacheKey := "languages"
-	value, err := c.Cache.Get(cacheKey, c.GetLanguages)
+	value, err := c.Cache.Get(cacheKey, c.GetLanguages, time.Now().AddDate(0, 0, 1))
 	return value.(string), err, cacheKey
 }
