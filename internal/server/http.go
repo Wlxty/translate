@@ -25,8 +25,8 @@ func Run() error {
 	cached := translateapp.Cache{client, rt}
 	var cacher translateapp.Cacher = &cached
 	service := &translateapp.Service{
-		Logger: logger,
-		Cached: cacher,
+		Logger:     logger,
+		Translator: cacher,
 	}
 	api := translateapp.NewApp(service)
 	api.HandleRequests(":8080")
