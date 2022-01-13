@@ -12,6 +12,9 @@ type Cache struct {
 	Cache cache.Through
 }
 
+func NewCache(libre libretranslate.Libre, cache cache.Through) Cache {
+	return Cache{libre, cache}
+}
 func (c *Cache) GetCache() cache.Through {
 	return c.Cache
 }

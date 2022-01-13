@@ -3,13 +3,13 @@ package cache
 import "time"
 
 type Through struct {
-	Proxy Proxy
+	MemoryCache MemoryCache
 }
 
 // Get reads a value through the proxy and set the cache
 func (rt *Through) Get(key string, req func() (interface{}, error), expire time.Time) (interface{}, error) {
 	// Get Get Cache from Proxy
-	ok, val, err := rt.Proxy.Get(key)
+	ok, val, err := rt.MemoryCache.Get(key)
 
 	// return the cache if found
 	if ok {
@@ -23,7 +23,7 @@ func (rt *Through) Get(key string, req func() (interface{}, error), expire time.
 	}
 
 	// Set the value from origin to the proxy cache
-	err = rt.Proxy.Set(key, val, expire)
+	err = rt.MemoryCache.Set(key, val, expire)
 	if err != nil {
 		return nil, err
 	}

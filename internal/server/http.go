@@ -19,16 +19,17 @@ import (
 // Running api in go routine and use of graceful shutdown
 func Run() error {
 	listenAddr := ":8080"
+
 	logger := logger.NewLogger("debug", true)
-	client := libretranslate.NewClient(logger, "http://libretranslate:5000/")
-	rt := cache.Through{Proxy: cache.NewInMemoryProxy()}
-	cached := translateapp.Cache{client, rt}
+	libre := libretranslate.NewClient(logger, "http://libretranslate:5000/")
+
+	cache := cache.Through{MemoryCache: cache.NewInMemoryCache()}
+	cached := translateapp.NewCache(libre, cache)
+
 	var cacher translateapp.Cacher = &cached
-	service := &translateapp.Service{
-		Logger:     logger,
-		Translator: cacher,
-	}
+	service := translateapp.NewService(logger, cacher)
 	api := translateapp.NewApp(service)
+
 	api.HandleRequests(":8080")
 	server := http.Server{
 		Addr:         listenAddr,

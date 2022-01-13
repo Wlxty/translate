@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetCache(t *testing.T) {
-	var rt = Through{Proxy: NewInMemoryProxy()}
+	var rt = Through{Proxy: NewInMemoryCache()}
 	expirationDate := time.Now().Add(time.Hour * 2)
 	value, _ := rt.Get("sample", Sample, expirationDate)
 	assert.Equalf(t, value, "Sample", "They should be equal")
