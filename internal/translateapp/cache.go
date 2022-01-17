@@ -37,8 +37,7 @@ func (c *Cache) GetCatche() cache.Through {
 func (c *Cache) Translate(q string, source string, target string) (Word, error) {
 	duration := time.Hour * 2
 	value, err := c.Cache.Get(q, func() (interface{}, error) {
-		var translator, _ = c.Libre.Translate(q, source, target)
-		return translator, nil
+		return c.Libre.Translate(q, source, target)
 
 	}, duration)
 	var word Word
