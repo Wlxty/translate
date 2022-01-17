@@ -21,7 +21,6 @@ func (c *Cache) GetCache() cache.Through {
 
 type Cacher interface {
 	Translate(q string, source string, target string) (Word, error)
-	GetLanguages() (interface{}, error)
 	Languages() ([]Language, error)
 	GetLibre() libretranslate.Client
 	GetCache() cache.Through
@@ -49,15 +48,13 @@ func (c *Cache) Translate(q string, source string, target string) (Word, error) 
 	return word, err
 }
 
-func (c *Cache) GetLanguages() (interface{}, error) {
-	return c.Libre.Languages()
-}
-
 // Service languages that uses data got from LibreTranslate:5000/languages, get request. Service uses Libretranslate client.
 func (c *Cache) Languages() ([]Language, error) {
 	cacheKey := "languages"
 	duration := time.Hour * 2
-	value, err := c.Cache.Get(cacheKey, c.GetLanguages, duration)
+	value, err := c.Cache.Get(cacheKey, func() (interface{}, error) {
+		return c.Libre.Languages()
+	}, duration)
 	var languages []Language
 	json.Unmarshal([]byte(value.(string)), languages)
 	return languages, err
