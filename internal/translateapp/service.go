@@ -1,7 +1,6 @@
 package translateapp
 
 import (
-	_ "github.com/leonelquinteros/gorand"
 	"go.uber.org/zap"
 	"translateapp/internal/cache"
 	"translateapp/internal/libretranslate"

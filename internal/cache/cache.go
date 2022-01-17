@@ -2,12 +2,17 @@ package cache
 
 import "time"
 
+type MemoryCache interface {
+	Get(key string) (bool, interface{}, error)
+	Set(key string, val interface{}, expire time.Duration) error
+}
+
 type Through struct {
 	MemoryCache MemoryCache
 }
 
 // Get reads a value through the proxy and set the cache
-func (rt *Through) Get(key string, req func() (interface{}, error), expire time.Time) (interface{}, error) {
+func (rt *Through) Get(key string, req func() (interface{}, error), expire time.Duration) (interface{}, error) {
 	// Get Get Cache from Proxy
 	ok, val, err := rt.MemoryCache.Get(key)
 
