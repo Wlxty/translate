@@ -22,12 +22,10 @@ func Run() error {
 
 	logger := logger.NewLogger("debug", true)
 	libre := libretranslate.NewClient(logger, "http://libretranslate:5000/")
-
+	librewrapper := translateapp.NewLibreWrapper(libre)
 	cache := cache.Through{MemoryCache: cache.NewInMemoryCache()}
-	cached := translateapp.NewCache(libre, cache)
-
-	var cacher translateapp.Cacher = &cached
-	service := translateapp.NewService(logger, cacher)
+	cached := translateapp.NewCache(librewrapper, cache)
+	service := translateapp.NewService(logger, cached)
 	api := translateapp.NewApp(service)
 
 	api.HandleRequests(":8080")

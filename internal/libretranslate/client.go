@@ -14,25 +14,6 @@ type Client struct {
 	Host   string
 }
 
-type Libre interface {
-	Translate(q string, source string, target string) (string, error)
-	Languages() (string, error)
-	GetHost() string
-	GetLogger() *zap.SugaredLogger
-	GetLibre() *Client
-}
-
-func (c *Client) GetLibre() *Client {
-	return c
-}
-func (c *Client) GetHost() string {
-	return c.Host
-}
-
-func (c *Client) GetLogger() *zap.SugaredLogger {
-	return c.Logger
-}
-
 // Constructor for libretranslate client
 func NewClient(Logger *zap.SugaredLogger, Host string) *Client {
 	client := Client{Logger, Host}
@@ -46,7 +27,7 @@ func (client *Client) Translate(q string, source string, target string) (string,
 		"source": {source},
 		"target": {target},
 	}
-	data, err := http.PostForm(client.GetHost()+"translate", input)
+	data, err := http.PostForm(client.Host+"translate", input)
 
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +48,7 @@ func (client *Client) Translate(q string, source string, target string) (string,
 
 // Get request, read all languages in libretranslate server
 func (client *Client) Languages() (string, error) {
-	data, err := http.Get(client.GetHost() + "languages")
+	data, err := http.Get(client.Host + "languages")
 	if err != nil {
 		log.Fatalln(err)
 	}

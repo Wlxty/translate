@@ -2,8 +2,6 @@ package translateapp
 
 import (
 	"go.uber.org/zap"
-	"translateapp/internal/cache"
-	"translateapp/internal/libretranslate"
 )
 
 //Struct of Service that got Libretranslate client and logger
@@ -15,8 +13,6 @@ type Service struct {
 type Translator interface {
 	Languages() ([]Language, error)
 	Translate(q string, source string, target string) (Word, error)
-	GetLibre() libretranslate.Client
-	GetCache() cache.Through
 }
 
 func NewService(logger *zap.SugaredLogger, translator Translator) *Service {

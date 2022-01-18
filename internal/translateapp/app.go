@@ -45,32 +45,29 @@ func NewApp(service *Service) *App {
 
 // Request to fetch all languages from Libretranslate service.
 func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Request) {
-	_, err := app.Service.Languages()
+	languages, err := app.Service.Languages()
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
 	app.Service.Logger.Debug("GET request on localhost:8080/languages")
-	_, cached, _ := app.Service.Translator.GetCache().MemoryCache.Get("languages")
-	app.Service.Logger.Debug("Key: language  Cached value: ", cached)
+	app.Service.Logger.Debug("Key: language  Cached value: ", languages)
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
-	fmt.Fprintf(writer, "%s", cached)
+	fmt.Fprintf(writer, "%s", languages)
 }
 
 // Request to get translation from Libretranslate service.
 func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
-	_, err := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
+	translate, err := app.Service.Translate(request.FormValue("q"), request.FormValue("source"), request.FormValue("target"))
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
 	q := request.FormValue("q")
-	_, cached, _ := app.Service.Translator.GetCache().MemoryCache.Get(q)
 
-	app.Service.Logger.Debug("Key: "+q, " Cached value: ", cached)
-	libre := app.Service.Translator.GetLibre()
-	libre.Logger.Debug("POST request on localhost:8080/translate")
-	fmt.Fprintf(writer, cached.(string))
+	app.Service.Logger.Debug("Key: "+q, " Cached value: ", translate)
+	app.Service.Logger.Debug("POST request on localhost:8080/translate")
+	fmt.Fprintf(writer, "%s", translate)
 }
 
 // Method to handle all requests

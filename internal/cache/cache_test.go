@@ -8,8 +8,8 @@ import (
 
 func TestGetCache(t *testing.T) {
 	var rt = Through{MemoryCache: NewInMemoryCache()}
-	expirationDate := time.Now().Add(time.Hour * 2)
-	value, _ := rt.Get("sample", Sample, expirationDate)
+	duration := time.Hour * 2
+	value, _ := rt.Get("sample", Sample, duration)
 	assert.Equalf(t, value, "Sample", "They should be equal")
 
 }
