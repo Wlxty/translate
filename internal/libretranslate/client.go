@@ -37,7 +37,6 @@ func (client *Client) Translate(q string, source string, target string) (string,
 	}
 	//Convert the body to type string
 	response := string(body)
-	client.Logger.Debugf(response)
 	return response, err
 }
 
