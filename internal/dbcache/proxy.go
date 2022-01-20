@@ -1,0 +1,52 @@
+package dbcache
+
+import (
+	"context"
+	"fmt"
+	"github.com/jackc/pgx/v4"
+	"time"
+)
+
+// NewInMemoryProxy creates an InMemory Proxy object
+func NewInDBCache(connection pgx.Conn) *DBCache {
+	// TODO: implement an eviction algorithm
+	return &DBCache{
+		connection,
+	}
+}
+
+// InMemoryProxy sets the value in the map object as a cache
+type DBCache struct {
+	Connection pgx.Conn
+}
+
+type Cache struct {
+	key        string
+	value      string
+	expiration string
+}
+
+// Get checks if the cache is stored in the map object and returns true and the value if the cache is set
+// It returns false if the value is not set
+func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
+	var value string
+	var expiration string
+	if err := dbc.Connection.QueryRow(context.Background(), "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &expiration); err != nil {
+		fmt.Println("Error occur while finding user: ", err)
+		obj := Cache{key, value, expiration}
+		return true, obj, err
+	}
+	return false, nil, nil
+}
+
+// Set sets a value to the map object as a caches
+func (dbc *DBCache) Set(key string, val interface{}, expire time.Duration) error {
+	// Executing SQL query for insertion
+	expiration := time.Now().Add(expire).Unix()
+	if _, err := dbc.Connection.Exec(context.Background(), "INSERT INTO cache(key, value, expiration) VALUES($1, $2, $3)", key, val, expiration); err != nil {
+		// Handling error, if occur
+		fmt.Println("Unable to insert due to: ", err)
+		return err
+	}
+	return nil
+}
