@@ -1,7 +1,6 @@
 package libretranslate
 
 import (
-	"encoding/json"
 	"go.uber.org/zap"
 	"io/ioutil"
 	"log"
@@ -28,22 +27,18 @@ func (client *Client) Translate(q string, source string, target string) (string,
 		"target": {target},
 	}
 	data, err := http.PostForm(client.Host+"translate", input)
-
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
-
-	var response map[string]interface{}
-
-	j := json.NewDecoder(data.Body).Decode(&response)
-	if j != nil {
-		client.Logger.Debug("Service Languages: Not valid Json")
+	//We Read the response body on the line below.
+	body, err := ioutil.ReadAll(data.Body)
+	if err != nil {
+		log.Fatalln(err)
 	}
-	client.Logger.Debug("Service Languages works fine")
-
-	jsonify, err := json.Marshal(response)
-
-	return string(jsonify), err
+	//Convert the body to type string
+	response := string(body)
+	client.Logger.Debugf(response)
+	return response, err
 }
 
 // Get request, read all languages in libretranslate server

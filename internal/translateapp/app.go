@@ -1,6 +1,7 @@
 package translateapp
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
@@ -54,7 +55,8 @@ func (app *App) LanguagePageHandler(writer http.ResponseWriter, request *http.Re
 	if err != nil {
 		fmt.Fprintf(writer, "Error: %s", err.Error())
 	}
-	fmt.Fprintf(writer, "%s", languages)
+	listOflanguages, _ := json.Marshal(languages)
+	fmt.Fprintf(writer, "%s", listOflanguages)
 }
 
 // Request to get translation from Libretranslate service.
@@ -67,7 +69,8 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 
 	app.Service.Logger.Debug("Key: "+q, " Cached value: ", translate)
 	app.Service.Logger.Debug("POST request on localhost:8080/translate")
-	fmt.Fprintf(writer, "%s", translate)
+	translated, _ := json.Marshal(translate)
+	fmt.Fprintf(writer, "%s", translated)
 }
 
 // Method to handle all requests
