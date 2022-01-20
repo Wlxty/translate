@@ -1,6 +1,9 @@
 # Air temporary directory.
 tmp/
-
+.idea/
+.idea/*
 # Local development configurations.
 .devcontainer/
-
+config.env
+*.swp
+*.swo

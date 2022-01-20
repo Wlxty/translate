@@ -1,16 +1,15 @@
 package main
 
 import (
-	"context"
-	"log"
-	"os/signal"
-	"syscall"
+	"fmt"
+	"os"
+	"translateapp/internal/server"
 )
 
 func main() {
-	log.Printf("starting...")
-	ctx, done := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer done()
-	<-ctx.Done()
-	log.Printf("successful shutdown")
+	// If you want to start server. Use Run method from server package.
+	if err := server.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
 }
