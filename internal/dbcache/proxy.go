@@ -20,12 +20,6 @@ type DBCache struct {
 	Connection pgx.Conn
 }
 
-type Cache struct {
-	key        string
-	value      string
-	expiration string
-}
-
 // Get checks if the cache is stored in the map object and returns true and the value if the cache is set
 // It returns false if the value is not set
 func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
@@ -33,7 +27,7 @@ func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 	var expiration string
 	err := dbc.Connection.QueryRow(context.Background(), "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &expiration)
 	if err == nil {
-		fmt.Println("Error occur while finding user: ", err)
+		fmt.Println("Error occur while finding cache: ", err)
 		return false, nil, nil
 	}
 	return true, value, err
@@ -43,10 +37,11 @@ func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 func (dbc *DBCache) Set(key string, val interface{}, expire time.Duration) error {
 	// Executing SQL query for insertion
 	expiration := time.Now().Add(expire).Unix()
-	if _, err := dbc.Connection.Exec(context.Background(), "INSERT INTO cache(key, value, expiration) VALUES($1, $2, $3)", key, val, expiration); err != nil {
+	_, err := dbc.Connection.Exec(context.Background(), "INSERT INTO cache(key, value, expiration) VALUES($1, $2, $3)", key, val, expiration)
+	if err != nil {
 		// Handling error, if occur
 		fmt.Println("Unable to insert due to: ", err)
-		return err
+		return nil
 	}
-	return nil
+	return err
 }
