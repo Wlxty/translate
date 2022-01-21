@@ -31,12 +31,12 @@ type Cache struct {
 func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 	var value string
 	var expiration string
-	if err := dbc.Connection.QueryRow(context.Background(), "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &expiration); err != nil {
+	err := dbc.Connection.QueryRow(context.Background(), "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &expiration)
+	if err == nil {
 		fmt.Println("Error occur while finding user: ", err)
-		obj := Cache{key, value, expiration}
-		return true, obj, err
+		return false, nil, nil
 	}
-	return false, nil, nil
+	return true, value, err
 }
 
 // Set sets a value to the map object as a caches
