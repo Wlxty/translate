@@ -1,9 +1,16 @@
 package dbcache
 
-import "time"
+import (
+	"github.com/jackc/pgx/v4"
+	"time"
+)
 
 type ThroughDB struct {
 	DBCache DBCache
+}
+
+func NewThroughDB(conn *pgx.Conn) *ThroughDB {
+	return &ThroughDB{DBCache: DBCache{Repo{conn}}}
 }
 
 // Get reads a value through the proxy and set the cache
