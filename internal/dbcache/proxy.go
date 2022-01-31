@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"go.uber.org/zap"
-	"log"
 	"time"
 )
 
@@ -24,6 +23,7 @@ func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 		if expiration <= 0 {
 			dbc.repo.Update(context.Background(), key, value, ttl)
 		}
+		dbc.logger.Infof("Getting row from database")
 		return true, value, nil
 	}
 	return false, nil, err
@@ -32,8 +32,7 @@ func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 // Set sets a value to the map object as a caches
 func (dbc *DBCache) Set(key string, val interface{}, expire time.Duration) error {
 	// Executing SQL query for insertion
-	log.Println("Inserting to database")
-
+	dbc.logger.Infof("Inserting to database")
 	expiration := time.Now().Add(expire)
 	data, ok := val.(string)
 	if !ok {
