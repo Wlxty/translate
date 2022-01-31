@@ -15,13 +15,14 @@ func NewRepo(conn *pgx.Conn) *Repo {
 	return &Repo{conn}
 }
 
-func (r Repo) Read(ctx context.Context, key string) (string, error) {
+func (r Repo) Read(ctx context.Context, key string) (string, time.Time, error) {
 	var value string
-	err := r.conn.QueryRow(ctx, "SELECT value from cache WHERE key=$1", key).Scan(&value)
+	var ttl time.Time
+	err := r.conn.QueryRow(ctx, "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &ttl)
 	if err != nil {
-		return "", err
+		return "", ttl, err
 	}
-	return value, nil
+	return value, ttl, nil
 }
 
 func (r Repo) Create(ctx context.Context, key, value string, expiration time.Time) error {

@@ -15,10 +15,14 @@ type DBCache struct {
 // Get checks if the cache is stored in the map object and returns true and the value if the cache is set
 // It returns false if the value is not set
 func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
-	value, err := dbc.repo.Read(context.Background(), key)
+	value, ttl, err := dbc.repo.Read(context.Background(), key)
 	if err == nil {
 		return true, value, nil
 	}
+	if time.Now().Sub(ttl) <= 0 {
+		return false, nil, err
+	}
+
 	return false, nil, err
 }
 

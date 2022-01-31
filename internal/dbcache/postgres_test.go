@@ -11,7 +11,7 @@ import (
 func TestRead(t *testing.T) {
 	conn, _ := pgx.Connect(context.Background(), "postgres://postgres:postgres@127.0.0.1:5432/postgres")
 	repo := NewRepo(conn)
-	value, _ := repo.Read(context.Background(), "Sample")
+	value, _, _ := repo.Read(context.Background(), "Sample")
 	assert.Equalf(t, value, "probka", "They should be equal")
 }
 
