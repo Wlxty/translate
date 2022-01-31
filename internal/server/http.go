@@ -32,7 +32,7 @@ func Run() error {
 		os.Exit(1)
 	}
 	//add constructor do ThroughDB
-	cache := dbcache.NewThroughDB(conn)
+	cache := dbcache.NewThroughDB(conn, logger)
 	cached := translateapp.NewCache(librewrapper, cache)
 	service := translateapp.NewService(logger, cached)
 	api := translateapp.NewApp(service)

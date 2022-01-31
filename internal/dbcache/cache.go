@@ -2,6 +2,7 @@ package dbcache
 
 import (
 	"github.com/jackc/pgx/v4"
+	"go.uber.org/zap"
 	"time"
 )
 
@@ -9,8 +10,8 @@ type ThroughDB struct {
 	DBCache DBCache
 }
 
-func NewThroughDB(conn *pgx.Conn) *ThroughDB {
-	return &ThroughDB{DBCache: DBCache{Repo{conn}}}
+func NewThroughDB(conn *pgx.Conn, logger *zap.SugaredLogger) *ThroughDB {
+	return &ThroughDB{DBCache: DBCache{Repo{conn}, logger}}
 }
 
 // Get reads a value through the proxy and set the cache

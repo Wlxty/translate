@@ -21,8 +21,9 @@ type InMemoryCache struct {
 // It returns false if the value is not set
 func (p *InMemoryCache) Get(key string) (bool, interface{}, error) {
 	val, ok := p.data[key]
-	expirationDate := p.expirationDate[key]
-	if time.Now().Sub(expirationDate) <= 0 {
+	ttl := p.expirationDate[key]
+	expiration := ttl.Sub(time.Now())
+	if expiration <= 0 {
 		delete(p.data, key)
 		delete(p.expirationDate, key)
 	}
