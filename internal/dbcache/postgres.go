@@ -25,8 +25,8 @@ func (r Repo) Read(ctx context.Context, key string) (string, time.Time, error) {
 	return value, ttl, nil
 }
 
-func (r Repo) Update(ctx context.Context, key, value string, expiration time.Time) error {
-	err := r.conn.QueryRow(ctx, "UPDATE cache SET value=$1, expiration=$2 WHERE key=$3", value, expiration, key)
+func (r Repo) Update(ctx context.Context, key string, expiration time.Time) error {
+	err := r.conn.QueryRow(ctx, "UPDATE cache SET expiration=$1 WHERE key=$3", expiration, key)
 	if err != nil {
 		return fmt.Errorf("Cannot update such row.")
 	}

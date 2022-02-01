@@ -21,7 +21,8 @@ func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 		expiration := ttl.Sub(time.Now())
 		dbc.logger.Debugf("Expired in %s", expiration)
 		if expiration <= 0 {
-			dbc.repo.Update(context.Background(), key, value, ttl)
+			newttl := time.Now().Add(time.Hour * 2)
+			dbc.repo.Update(context.Background(), key, newttl)
 		}
 		dbc.logger.Infof("Getting row from database")
 		return true, value, nil
