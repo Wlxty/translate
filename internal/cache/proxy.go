@@ -35,8 +35,6 @@ func (mc *InMemoryCache) Get(key string) (bool, interface{}, error) {
 		mc.logger.Debugf("Row has been deleted")
 
 	}
-	mc.logger.Debugf("Row has been deleted")
-
 	return ok, val, nil
 }
 
