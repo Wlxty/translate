@@ -2,7 +2,6 @@ package dbcache
 
 import (
 	"context"
-	"fmt"
 	"github.com/jackc/pgx/v4"
 	"time"
 )
@@ -25,16 +24,8 @@ func (r Repo) Read(ctx context.Context, key string) (string, time.Time, error) {
 	return value, ttl, nil
 }
 
-func (r Repo) Update(ctx context.Context, key string, expiration time.Time) error {
-	err := r.conn.QueryRow(ctx, "UPDATE cache SET expiration=$1 WHERE key=$3", expiration, key)
-	if err != nil {
-		return fmt.Errorf("Cannot update such row.")
-	}
-	return nil
-}
-
 func (r Repo) Create(ctx context.Context, key, value string, expiration time.Time) error {
-	_, err := r.conn.Exec(ctx, "INSERT INTO cache(key, value, expiration) VALUES($1, $2, $3)", key, value, expiration)
+	_, err := r.conn.Exec(ctx, "INSERT INTO cache(key, value, expiration) VALUES($1, $2, $3) ON CONFLICT (key) DO UPDATE SET value=$2, expiration=$3;", key, value, expiration)
 	if err != nil {
 		return err
 	}

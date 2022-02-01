@@ -19,10 +19,8 @@ func (dbc *DBCache) Get(key string) (bool, interface{}, error) {
 	value, ttl, err := dbc.repo.Read(context.Background(), key)
 	if err == nil {
 		expiration := ttl.Sub(time.Now())
-		dbc.logger.Debugf("Expired in %s", expiration)
 		if expiration <= 0 {
-			newttl := time.Now().Add(time.Hour * 2)
-			dbc.repo.Update(context.Background(), key, newttl)
+			return false, nil, err
 		}
 		dbc.logger.Infof("Getting row from database")
 		return true, value, nil
