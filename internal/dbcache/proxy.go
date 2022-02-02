@@ -13,6 +13,10 @@ type DBCache struct {
 	logger *zap.SugaredLogger
 }
 
+func NewDBCache(repo Repository, logger *zap.SugaredLogger) *DBCache {
+	return &DBCache{repo, logger}
+}
+
 // Get checks if the cache is stored in the map object and returns true and the value if the cache is set
 // It returns false if the value is not set
 func (dbc *DBCache) Get(key string) (bool, interface{}, error) {

@@ -2,22 +2,28 @@ package dbcache
 
 import (
 	"context"
+	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"time"
 )
 
 type Repo struct {
-	conn *pgx.Conn
+	conn Connector
 }
 
-func NewRepo(conn *pgx.Conn) *Repo {
+type Connector interface {
+	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
+	Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error)
+}
+
+func NewRepo(conn Connector) *Repo {
 	return &Repo{conn}
 }
 
 func (r Repo) Read(ctx context.Context, key string) (string, time.Time, error) {
 	var value string
 	var ttl time.Time
-	err := r.conn.QueryRow(ctx, "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &ttl)
+	var err = r.conn.QueryRow(ctx, "SELECT value, expiration from cache WHERE key=$1", key).Scan(&value, &ttl)
 	if err != nil {
 		return "", ttl, err
 	}

@@ -1,25 +1,59 @@
-package dbcache
+package dbcache_test
 
 import (
 	"context"
-	"github.com/jackc/pgx/v4"
-	"github.com/stretchr/testify/assert"
+	"errors"
+	"strconv"
 	"testing"
 	"time"
+	"translateapp/internal/dbcache"
+	"translateapp/internal/logger"
+	_ "translateapp/internal/logger"
+
+	"github.com/pashagolub/pgxmock"
+	"github.com/stretchr/testify/require"
 )
 
-func TestRead(t *testing.T) {
-	conn, _ := pgx.Connect(context.Background(), "postgres://postgres:postgres@127.0.0.1:5432/postgres")
-	repo := NewRepo(conn)
-	value, _, _ := repo.Read(context.Background(), "Sample")
-	assert.Equalf(t, value, "probka", "They should be equal")
+func TestSet(t *testing.T) {
+	const key = "key"
+	const expected = "true"
+
+	tt := time.Now().Add(30 * time.Second)
+
+	mock, err := pgxmock.NewConn()
+	require.NoError(t, err)
+	defer mock.Close(context.Background())
+
+	rows := mock.NewRows([]string{"value", "expiration"}).AddRow(expected, tt)
+	mock.ExpectQuery("SELECT value, expiration from cache WHERE").WithArgs(key).WillReturnRows(rows)
+
+	repo := dbcache.NewRepo(mock)
+	loger := logger.DefaultLogger()
+	var cache = dbcache.NewDBCache(repo, loger)
+	val, _, err := cache.Get(key)
+	require.NoError(t, err)
+	str := strconv.FormatBool(val)
+	require.Equal(t, expected, str)
+
+	require.NoError(t, mock.ExpectationsWereMet())
 }
 
-func TestCreate(t *testing.T) {
-	conn, _ := pgx.Connect(context.Background(), "postgres://postgres:postgres@127.0.0.1:5432/postgres")
-	repo := NewRepo(conn)
-	duration := time.Hour * 2
-	expiration := time.Now().Add(duration)
-	err := repo.Create(context.Background(), "Dog", "Pies", expiration)
-	assert.Equalf(t, err, nil, "They should be equal")
+func TestSetError(t *testing.T) {
+	const key = "key"
+
+	mock, err := pgxmock.NewConn()
+	require.NoError(t, err)
+	defer mock.Close(context.Background())
+
+	mock.ExpectQuery("SELECT value, timeout from cache WHERE").WithArgs(key).WillReturnError(errors.New("error"))
+	repo := dbcache.NewRepo(mock)
+
+	cache := dbcache.NewDBCache(repo, logger.DefaultLogger())
+	val, _, err := cache.Get(key)
+	str := strconv.FormatBool(val)
+
+	require.Error(t, err)
+	require.Equal(t, "false", str)
+
+	require.Error(t, mock.ExpectationsWereMet())
 }
