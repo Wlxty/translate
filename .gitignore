@@ -7,3 +7,4 @@ tmp/
 config.env
 *.swp
 *.swo
+*.txt

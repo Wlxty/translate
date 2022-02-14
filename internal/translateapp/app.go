@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	_ "translateapp/internal/logger"
+	"translateapp/internal/upload"
 )
 
 type App struct {
@@ -73,6 +73,32 @@ func (app *App) TranslatePageHandler(writer http.ResponseWriter, request *http.R
 	fmt.Fprintf(writer, "%s", translated)
 }
 
+func (app *App) BatchTranslatePageHandler(writer http.ResponseWriter, request *http.Request) {
+	request.ParseMultipartForm(10 << 20)
+	file, _, err := request.FormFile("upload")
+	defer file.Close()
+
+	if err != nil {
+		fmt.Errorf("Error Retrieving the File")
+		fmt.Errorf(err.Error())
+		return
+	}
+	uploaded := upload.Upload{file}
+
+	dictionary, err := uploaded.ToText()
+	if err != nil {
+		fmt.Fprintf(writer, "Error: %s", err.Error())
+	}
+	translate, err := app.Service.BatchTranslate(dictionary, request.FormValue("source"), request.FormValue("target"))
+	if err != nil {
+		fmt.Fprintf(writer, "Error: %s", err.Error())
+	}
+
+	app.Service.Logger.Debug("POST request on localhost:8080/translate")
+	translated, _ := json.Marshal(translate)
+	fmt.Fprintf(writer, "%s", translated)
+}
+
 // Method to handle all requests
 func (app *App) HandleRequests(port string) {
 	//create a new router
@@ -87,4 +113,6 @@ func (app *App) HandleRequests(port string) {
 func (app *App) Routes(router *mux.Router) {
 	router.HandleFunc("/languages", app.LanguagePageHandler).Methods("GET")
 	router.HandleFunc("/translate", app.TranslatePageHandler).Methods("POST")
+	router.HandleFunc("/batchtranslate", app.BatchTranslatePageHandler).Methods("POST")
+
 }
