@@ -3,13 +3,14 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/jackc/pgx/v4"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"translateapp/internal/cache"
+	"translateapp/internal/dbcache"
 	"translateapp/internal/libretranslate"
 	"translateapp/internal/logger"
 	"translateapp/internal/translateapp"
@@ -23,10 +24,23 @@ func Run() error {
 	logger := logger.NewLogger("debug", true)
 	libre := libretranslate.NewClient(logger, "http://libretranslate:5000/")
 	librewrapper := translateapp.NewLibreWrapper(libre)
-	cache := cache.Through{MemoryCache: cache.NewInMemoryCache()}
+
+	//DBCache
+	conn, err := pgx.Connect(context.Background(), "postgres://postgres:postgres@db:5432/postgres")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	//add constructor do ThroughDB
+	cache := dbcache.NewThroughDB(conn, logger)
 	cached := translateapp.NewCache(librewrapper, cache)
 	service := translateapp.NewService(logger, cached)
 	api := translateapp.NewApp(service)
+
+	//cache := cache.Through{MemoryCache: cache.NewInMemoryCache()}
+	//cached := translateapp.NewCache(librewrapper, &cache)
+	//service := translateapp.NewService(logger, cached)
+	//api := translateapp.NewApp(service)
 
 	api.HandleRequests(":8080")
 	server := http.Server{

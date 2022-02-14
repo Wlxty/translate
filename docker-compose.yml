@@ -10,17 +10,18 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
 
-  #db:
-   # image: postgres:14.1-alpine3.15
-    #restart: unless-stopped
-    #volumes:
-     # - postgres-data:/var/lib/postgresql/data
-    #environment:
-     # POSTGRES_USER: postgres
-      #POSTGRES_DB: postgres
-      #POSTGRES_PASSWORD: postgres
-    #ports:
-     # - "127.0.0.1:5432:5432"
+  db:
+
+    image: postgres:14.1-alpine3.15
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
 
   libretranslate:
     image: libretranslate/libretranslate:latest

@@ -4,10 +4,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+	"translateapp/internal/logger"
 )
 
 func TestGetCache(t *testing.T) {
-	var rt = Through{MemoryCache: NewInMemoryCache()}
+	logger := logger.NewLogger("debug", true)
+	var rt = Through{MemoryCache: NewInMemoryCache(logger)}
 	duration := time.Hour * 2
 	value, _ := rt.Get("sample", Sample, duration)
 	assert.Equalf(t, value, "Sample", "They should be equal")
