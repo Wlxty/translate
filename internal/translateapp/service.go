@@ -34,3 +34,15 @@ func (service *Service) Translate(q string, source string, target string) (Word,
 func (service *Service) Languages() ([]Language, error) {
 	return service.Translator.Languages()
 }
+
+func (service *Service) BatchTranslate(q []string, source string, target string) ([]Word, error) {
+	var words []Word
+	for _, translation := range q {
+		word, err := service.Translator.Translate(translation, source, target)
+		words = append(words, word)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return words, nil
+}
